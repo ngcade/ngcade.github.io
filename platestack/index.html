@@ -248,6 +248,8 @@
       .hes-del-session-btn{width:100%;margin-top:var(--s3);padding:10px;border-radius:var(--r-lg);background:rgba(239,68,68,0.07);border:1.5px solid rgba(239,68,68,0.25);color:var(--error);font-size:var(--sm);font-weight:600;display:flex;align-items:center;justify-content:center;gap:var(--s2);}
     .hes-del-session-btn:active{background:rgba(239,68,68,0.18);}
       .h-add-session-btn{padding:7px 14px;background:var(--accent-dim);border:1.5px solid var(--accent);border-radius:var(--r-full);color:var(--accent);font-size:var(--xs);font-weight:700;}
+      .h-data-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:var(--r-md);background:var(--surface);border:1.5px solid var(--border);color:var(--muted);transition:all var(--ease);}
+    .h-data-btn:active{color:var(--accent);border-color:var(--accent);}
   </style>
 </head>
 <body>
@@ -369,7 +371,15 @@
     <section class="view" id="view-history">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s3);">
         <div class="section-title" style="margin-bottom:0;">Workout History</div>
-        <button class="h-add-session-btn" onclick="openAddSession()">+ New Session</button>
+        <div style="display:flex;gap:var(--s2);align-items:center;">
+          <button class="h-data-btn" onclick="importData()" title="Import">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </button>
+          <button class="h-data-btn" onclick="exportData()" title="Export">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <button class="h-add-session-btn" onclick="openAddSession()">+ New Session</button>
+        </div>
       </div>
       <div id="history-content"></div>
     </section>
@@ -547,6 +557,64 @@ let S={
     {id:'p14',weight:20,  label:'20',   color:'#c74123', size:'lg'},
   ]
 };
+
+const STORAGE_KEY='platestack_v1';
+
+function saveData(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      history: S.history,
+      plates: S.plates,
+      barWeight: S.barWeight,
+      reps: S.reps
+    }));
+  }catch(e){}
+}
+
+function loadData(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const d=JSON.parse(raw);
+    if(d.history) S.history=d.history;
+    if(d.plates)  S.plates=d.plates;
+    if(d.barWeight) S.barWeight=d.barWeight;
+    if(typeof d.reps==='number') S.reps=d.reps;
+  }catch(e){}
+}
+
+function exportData(){
+  const json=JSON.stringify({history:S.history,plates:S.plates,barWeight:S.barWeight,reps:S.reps},null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='platestack-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+
+function importData(){
+  const inp=document.createElement('input');
+  inp.type='file'; inp.accept='.json,application/json';
+  inp.onchange=e=>{
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try{
+        const d=JSON.parse(ev.target.result);
+        if(d.history) S.history=d.history;
+        if(d.plates)  S.plates=d.plates;
+        if(d.barWeight) S.barWeight=d.barWeight;
+        if(typeof d.reps==='number') S.reps=d.reps;
+        saveData();
+        refreshWorkout(); renderHistory(); renderPlatesGrid(); renderPlateEditGrid();
+        showToast('Data imported!');
+      }catch(ex){ showToast('Import failed'); }
+    };
+    reader.readAsText(file);
+  };
+  inp.click();
+}
+
 
 function totalW(){return S.barWeight+perSide()*2;}
 function perSide(){
@@ -787,7 +855,7 @@ function finishWorkout(){
   S.sets=[];S.selected={};S.plateLog=[];
   document.getElementById('ex-input').value='';S.activeEx='';
   renderExChips();refreshWorkout();renderSets();
-  showToast('Workout saved!');
+  saveData();showToast('Workout saved!');
   setTimeout(()=>goView('history',document.querySelectorAll('.nav-btn')[1]),600);
 }
 function delSet(i){S.sets.splice(i,1);renderSets();}
@@ -998,6 +1066,7 @@ function openEditSession(si){
 function deleteSessionFromEdit(){
   S.history.splice(_editSi,1);
   _editBackup=null;
+  saveData();
   document.getElementById('hes-overlay').style.display='none';
   renderHistory();
 }
@@ -1191,7 +1260,7 @@ function addPlate(){
   renderPlatesEditGrid();
   renderPlatesGrid();
   updatePreview();
-  showToast(`${w} kg plate added`);
+  saveData();showToast(`${w} kg plate added`);
 }
 
 /* Edit modal */
@@ -1251,7 +1320,7 @@ function saveEditPlate(){
   p.weight=w;p.color=S.editColor;p.size=S.editSize;p.label=String(w);
   closeEditModal();
   renderPlatesEditGrid();renderPlatesGrid();
-  showToast('Plate updated');
+  saveData();showToast('Plate updated');
 }
 function deleteEditPlate(){
   if(!editingId)return;
@@ -1294,7 +1363,7 @@ function showToast(msg){
 (function(){
   document.getElementById('date-badge').textContent=
     new Date().toLocaleDateString('en-SG',{weekday:'short',month:'short',day:'numeric'});
-  renderExChips();renderWeight();renderPlatesGrid();renderBBViz();renderRemoveStrip();
+  loadData();renderExChips();renderWeight();renderPlatesGrid();renderBBViz();renderRemoveStrip();renderHistory();
 })();
 
 /* Rest Timer */

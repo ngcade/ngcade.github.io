@@ -155,7 +155,7 @@
     .qw-chip{padding:var(--s1) var(--s3);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-full);font-size:var(--xs);font-weight:700;color:var(--muted);transition:all var(--ease);}
     .qw-chip:active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent);}
     .plates-grid-label{font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);margin-bottom:var(--s3);}
-    .plates-edit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:var(--s4) var(--s3);margin-bottom:var(--s6);align-items:start;}
+    .plates-edit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:var(--s3) var(--s2);margin-bottom:var(--s6);align-items:start;}
     .pedit-btn{display:flex;flex-direction:column;align-items:center;gap:var(--s2);padding:var(--s3) var(--s2);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-lg);cursor:pointer;transition:all var(--ease);position:relative;height:110px;justify-content:center;overflow:visible;}
     .pedit-btn:active{transform:scale(0.94);border-color:var(--accent);}
     .pedit-lbl{font-size:var(--xs);font-weight:600;color:var(--muted);}
@@ -187,8 +187,8 @@
     .form-lbl{font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);display:block;margin-bottom:var(--s2);}
     .form-inp{width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s3);font-size:var(--sm);color:var(--text);transition:border-color var(--ease);}
     .form-inp:focus{border-color:var(--accent);outline:none;}
-    .swatches{display:grid;grid-template-columns:repeat(11,1fr);gap:6px;}
-    .swatch{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.12);transition:all var(--ease);}
+    .swatches{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:5px;}
+    .swatch{width:100%;aspect-ratio:1;border-radius:50%;cursor:pointer;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.12);transition:all var(--ease);}
     .swatch.sel{border-color:#fff;transform:scale(1.18);}
     .add-plate-btn{width:100%;padding:var(--s3);background:var(--accent);color:#fff;font-weight:700;font-size:var(--sm);border-radius:var(--r-lg);transition:all var(--ease);min-height:46px;}
     .add-plate-btn:active{background:var(--accent-h);}

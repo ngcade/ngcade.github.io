@@ -922,8 +922,7 @@ function renderHistory(){
     return;
   }
   el.innerHTML='';
-  [...S.history].reverse().forEach((session,ri)=>{
-    const si=S.history.length-1-ri;
+  [...S.history].map((session,si)=>({session,si})).sort((a,b)=>new Date(b.session.date)-new Date(a.session.date)).forEach(({session,si})=>{
     const div=document.createElement('div');div.className='history-day';
     const st=session.time?' · '+session.time:'';
     const exHtml=session.exercises.map((ex,ei)=>{

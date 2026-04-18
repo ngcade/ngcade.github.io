@@ -1040,6 +1040,13 @@ function deleteHistoryExercise(si,ei){
 
 
 
+function deleteEditEx(ei){
+  if(!confirm('Remove this exercise from the session?')) return;
+  S.history[_editSi].exercises.splice(ei,1);
+  saveData();
+  openEditSession(_editSi);
+}
+
 // Edit session modal
 let _editSi=null;
 let _editBackup=null;
@@ -1095,7 +1102,7 @@ function openEditSession(si){
   sess.exercises.forEach((ex,ei)=>{
     const exDiv=document.createElement('div');
     exDiv.className='hes-ex-block';exDiv.dataset.ei=ei;
-    exDiv.innerHTML=`<input class="hes-ex-name-inp" type="text" value="${ex.name}" data-ei="${ei}" placeholder="Exercise name">`;
+    exDiv.innerHTML=`<div style="display:flex;align-items:center;gap:var(--s2);margin-bottom:var(--s3);"><input class="hes-ex-name-inp" style="margin-bottom:0;flex:1;" type="text" value="${ex.name}" data-ei="${ei}" placeholder="Exercise name"><button type="button" onclick="deleteEditEx(${ei})" style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:rgba(239,68,68,0.08);border:1.5px solid rgba(239,68,68,0.25);border-radius:var(--r2);color:var(--error);cursor:pointer;" title="Remove exercise"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button></div>`;
     ex.sets.forEach((s,seti)=>{
       const row=document.createElement('div');
       row.className='hes-set-row';

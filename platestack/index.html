@@ -630,6 +630,7 @@ function perSide(){
     const p=S.plates.find(x=>x.id===id);return s+(p?p.weight*n:0);},0);
 }
 function fmtW(w){
+  if(w==null||isNaN(w))return '0.0';
   if(w===Math.floor(w))return w.toFixed(1);
   const s=w.toFixed(2);return s.endsWith('0')?s.slice(0,-1):s;
 }
@@ -992,6 +993,7 @@ function renderHistory(){
     return;
   }
   filtered.forEach(({session,si})=>{
+    try{
     const div=document.createElement('div');div.className='history-day';
     const st=session.time?' · '+session.time:'';
     const exHtml=session.exercises.map((ex,ei)=>{
@@ -1005,8 +1007,8 @@ function renderHistory(){
         const pbBadge=isPBRow?`<span class="pb-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="#facc15" stroke="none"><path d="M2 20h20v2H2zM3 9l4 3 5-8 5 8 4-3-2 9H5z"/></svg>PB</span>`:'';
         return `<tr>
           <td class="h-num">${i+1}</td>
-          <td class="h-wt"><span style="${wtStyle}">${fmtW(s.weight)} kg</span>${pbBadge}</td>
-          <td class="h-reps">× ${s.reps}</td>
+          <td class="h-wt"><span style="${wtStyle}">${fmtW(s.weight??0)} kg</span>${pbBadge}</td>
+          <td class="h-reps">× ${s.reps??'—'}</td>
         </tr>`;
       }).join('');
       return `<div class="history-ex h-ex-block" onclick="openEditSession(${si})">
@@ -1014,12 +1016,14 @@ function renderHistory(){
           <table class="h-table"><tbody>${rows}</tbody></table>
         </div>`;
     }).join('');
+    const exHtmlStr=typeof exHtml==='string'?exHtml:exHtml.join('');
     div.innerHTML=`
       <div class="history-date-row">
         <span class="history-date">${fmtDate(session.date)+st}</span>
       </div>
-      ${exHtml}`;
+      ${exHtmlStr||'<div style="color:var(--muted);font-size:var(--sm);padding:var(--s2) 0;">No exercises logged.</div>'}`;
     el.appendChild(div);
+    }catch(e){console.warn('renderHistory session error',si,e);}
   });
 }
 
@@ -1030,7 +1034,7 @@ function deleteHistorySession(si){
 }
 function deleteHistoryExercise(si,ei){
   S.history[si].exercises.splice(ei,1);
-  if(!S.history[si].exercises.length) S.history.splice(si,1);
+  // keep session even if all exercises removed
   renderHistory();
 }
 
@@ -1145,7 +1149,7 @@ function saveEditSession(){
     if(!exMap[ei]) exMap[ei]={};
     if(!exMap[ei][seti]) exMap[ei][seti]={};
     const val=field==='weight'?parseFloat(inp.value):parseInt(inp.value);
-    if(!isNaN(val)&&val>0) exMap[ei][seti][field]=val;
+    if(!isNaN(val)&&val>=0) exMap[ei][seti][field]=val;
   });
   // Save exercise names
   document.querySelectorAll('.hes-ex-name-inp').forEach(inp=>{

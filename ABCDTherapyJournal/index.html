@@ -4,22 +4,29 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Therapy Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;1,400&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f5f0eb;--surface:#ede7df;--card:#faf7f4;--border:#ddd5ca;--accent:#8b7355;--accent2:#6b5b45;--accent-light:#c4a882;--text:#3d342a;--muted:#9e8e7e;--danger:#c0614a;--warning:#b8853a;--highlight:#e8ddd0;--radius:16px;--sage:#7a8f7a;--blush:#c48b7a;--sky:#7a9aaa}
+:root{--bg:#f5f0eb;--surface:#ede7df;--card:#faf7f4;--border:#ddd5ca;--accent:#8b7355;--accent2:#6b5b45;--accent-light:#c4a882;--text:#3d342a;--muted:#9e8e7e;--danger:#c0614a;--warning:#b8853a;--highlight:#e8ddd0;--radius:16px;--sage:#7a8f7a;--olive:#7a8c3a;--olive-light:#e8edda;--olive-muted:#b5c28a;--blush:#c48b7a;--sky:#7a9aaa}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Georgia,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:0 0 80px}
 header{background:linear-gradient(135deg,#e8ddd0,#ddd0c0);border-bottom:1px solid var(--border);padding:18px 20px 14px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between}
-.header-left h1{font-size:18px;font-weight:700;color:var(--accent2)}.header-left p{font-size:12px;color:var(--muted);margin-top:2px}
+
+  .logo-icon{width:44px;height:44px;background:#6b5b45;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .logo-text{display:flex;align-items:baseline;gap:6px}
+  .logo-text .w1{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#3d342a;line-height:1}
+  .logo-text .w2{font-family:'Fraunces',serif;font-size:22px;font-style:italic;font-weight:400;color:#c4a882;line-height:1}
+
+  .header-left h1-DISABLED{font-size:18px;font-weight:700;color:var(--accent2)}.header-left p{font-size:12px;color:var(--muted);margin-top:2px}
 .btn-export{background:var(--accent2);color:#faf7f4;border:none;padding:8px 14px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer}
 .container{padding:16px;max-width:640px;margin:0 auto}
 .date-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;background:var(--card);border-radius:var(--radius);padding:12px 16px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(139,115,85,.07)}
-.date-bar label{font-size:12px;color:var(--muted);white-space:nowrap;font-weight:600}
-.date-bar input[type=date]{background:transparent;border:none;color:var(--text);font-size:14px;font-weight:600;flex:1;outline:none;cursor:pointer}
+.date-bar label{font-size:11px;color:var(--olive);white-space:nowrap;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+.date-bar input[type=date]{background:transparent;border:none;color:var(--accent2);font-size:14px;font-weight:600;flex:1;outline:none;cursor:pointer;font-family:inherit}
 .date-bar input[type=date]::-webkit-calendar-picker-indicator{filter:invert(40%) sepia(20%) saturate(500%) hue-rotate(10deg)}
 .entry-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden;box-shadow:0 2px 10px rgba(139,115,85,.08)}
 .card-header{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:linear-gradient(135deg,#ede7df,#e8ddd0);border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
 .card-header-left{display:flex;align-items:center;gap:8px}
-.entry-num{background:var(--accent);color:#faf7f4;width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.entry-num{background:var(--olive);color:#faf7f4;width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .card-header h3{font-size:13px;font-weight:700;color:var(--accent2)}.card-time{font-size:11px;color:var(--muted)}
 .collapse-icon{color:var(--muted);font-size:14px;transition:transform .25s}
 .entry-card.collapsed .collapse-icon{transform:rotate(-90deg)}
@@ -28,9 +35,9 @@ header{background:linear-gradient(135deg,#e8ddd0,#ddd0c0);border-bottom:1px soli
 .field label{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.6px}
 .field-badge{width:20px;height:20px;border-radius:7px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .badge-a{background:#ddeaf0;color:var(--sky)}.badge-b{background:#ede0f0;color:#9a6fb0}
-.badge-c{background:#f5e0dd;color:var(--blush)}.badge-d{background:#dff0e4;color:var(--sage)}
+.badge-c{background:#f5e0dd;color:var(--blush)}.badge-d{background:var(--olive-light);color:var(--olive)}
 textarea{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:11px;color:var(--text);padding:11px 13px;font-size:14px;line-height:1.6;resize:vertical;outline:none;min-height:82px;font-family:inherit;transition:border-color .2s}
-textarea:focus{border-color:var(--accent-light);background:#fdfaf7}
+textarea:focus{border-color:var(--olive-muted);background:#fdfaf7}
 textarea::placeholder{color:#b8a898;font-size:13px}
 .rating-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
 .rating-label{font-size:12px;color:var(--muted);white-space:nowrap;font-weight:500}
@@ -46,10 +53,10 @@ textarea::placeholder{color:#b8a898;font-size:13px}
 .btn-save{background:var(--accent2);color:#faf7f4;border:none;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer}
 .btn-discard{background:transparent;color:var(--danger);border:1.5px solid #e0b8b0;padding:10px 13px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer}
 .btn-discard:hover{background:#faeae7}
-.add-btn{width:100%;padding:15px;border-radius:var(--radius);background:transparent;border:2px dashed var(--border);color:var(--accent);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;margin-bottom:4px}
-.add-btn:hover{border-color:var(--accent-light);background:#f0e8de}
+.add-btn{width:100%;padding:15px;border-radius:var(--radius);background:transparent;border:2px dashed var(--olive-muted);color:var(--olive);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;margin-bottom:4px}
+.add-btn:hover{border-color:var(--olive-muted);background:var(--olive-light)}
 .entries-section{margin-top:22px}
-.section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-title{font-size:11px;font-weight:700;color:var(--olive);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border)}
 .saved-entry-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;box-shadow:0 1px 6px rgba(139,115,85,.06)}
 .saved-header{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;background:linear-gradient(135deg,#ede7df,#e8ddd0);border-bottom:1px solid var(--border);cursor:pointer}
@@ -74,7 +81,7 @@ textarea::placeholder{color:#b8a898;font-size:13px}
 .toast.show{opacity:1}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;height:64px;box-shadow:0 -2px 12px rgba(139,115,85,.08)}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;color:var(--muted);font-size:10px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:color .2s}
-.nav-btn.active{color:var(--accent2)}.nav-btn svg{width:20px;height:20px}
+.nav-btn.active{color:var(--olive)}.nav-btn.active svg{color:var(--olive)}.nav-btn svg{width:20px;height:20px}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(61,52,42,.5);z-index:200;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
 .modal-overlay.open{display:flex}
 .modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(61,52,42,.2)}
@@ -92,21 +99,33 @@ table.export-tbl td{padding:9px 10px;border-bottom:1px solid var(--border);verti
 table.export-tbl tr:hover td{background:var(--highlight)}
 .view{display:none}.view.active{display:block}
 .hist-date-group{margin-bottom:20px}
-.hist-date-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.hist-date-label{font-size:11px;font-weight:700;color:var(--olive);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .hist-date-label::after{content:'';flex:1;height:1px;background:var(--border)}
 </style>
 </head>
 <body>
 <header>
   <div class="header-left">
-    <h1>&#127807; Therapy Journal</h1>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="logo-icon">
+        <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 4C14 4 6 8 6 16C6 20.4 9.6 24 14 24C18.4 24 22 20.4 22 16C22 8 14 4 14 4Z" fill="#7a8c3a"/>
+          <path d="M14 4C14 4 14 12 14 20" stroke="#faf7f4" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M10 13C10 13 12 14.5 14 14" stroke="#faf7f4" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="w1">Therapy</span>
+        <span class="w2">Journal</span>
+      </div>
+    </div>
     <p id="headerDate"></p>
   </div>
   <button class="btn-export" onclick="openExportModal()">&#8681; Export</button>
 </header>
 <div id="view-log" class="view active container">
   <div class="date-bar">
-    <label>&#128197; Date</label>
+    <label>Date</label>
     <input type="date" id="entryDate"/>
   </div>
   <div id="forms-container"></div>
@@ -202,7 +221,7 @@ function addNewForm() {
     '<div class="card-header" onclick="toggleCard(\''+id+'\')">' +
       '<div class="card-header-left">' +
         '<div class="entry-num">'+n+'</div>' +
-        '<h3>New Entry</h3>' +
+        '<h3>New Reflection</h3>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:8px">' +
         '<span class="card-time">'+t+'</span>' +
@@ -274,6 +293,7 @@ function saveEntry(id) {
   document.getElementById(id).remove();
   renderSaved();
   toast('Entry saved!');
+  if(document.activeElement) document.activeElement.blur();
 }
 
 function renderSaved() {
@@ -283,12 +303,12 @@ function renderSaved() {
   list.innerHTML = '';
   var filtered = [];
   for (var i=0; i<entries.length; i++) { if (entries[i].date===date) filtered.push(entries[i]); }
-  filtered.sort(function(a,b){ return a.ts-b.ts; });
+  filtered.sort(function(a,b){ return b.ts-a.ts; });
   if (!filtered.length) {
-    list.innerHTML='<div class="empty-state"><div class="emoji">&#127807;</div>No saved entries yet.</div>';
+    list.innerHTML='<div class="empty-state"><div class="emoji">&#129504;</div>No saved entries yet.</div>';
     return;
   }
-  for (var i=0; i<filtered.length; i++) buildSavedCard(list,filtered[i],i+1,false);
+  for (var i=0; i<filtered.length; i++) buildSavedCard(list,filtered[i],filtered.length-i,false);
 }
 
 function sfHtml(letter,label,text,badge,r) {
@@ -308,7 +328,7 @@ function buildSavedCard(container, e, idx, collapsed) {
   el.innerHTML =
     '<div class="saved-header" onclick="toggleBody(\'b'+e.id+'\')">' +
       '<div class="saved-header-left">' +
-        '<span class="saved-num">Entry '+idx+'</span>' +
+        '<span class="saved-num">Reflection '+idx+'</span>' +
         '<span class="saved-time">'+fmtTime(e.ts)+'</span>' +
         chip(e.r) +
       '</div>' +
@@ -320,8 +340,8 @@ function buildSavedCard(container, e, idx, collapsed) {
       sfHtml('C','Emotions/Behaviors',e.c,'badge-c',e.r) +
       sfHtml('D','Dispute/Debate',e.d,'badge-d') +
       '<div class="saved-actions">' +
-        '<button class="btn-del-saved" onclick="delEntry(\''+e.id+'\')">&#128465; Delete</button>' +
-        '<button class="btn-edit" onclick="editEntry(\''+e.id+'\')">&#9998; Edit</button>' +
+        '<button class="btn-del-saved" onclick="delEntry(\''+e.id+'\')">Delete</button>' +
+        '<button class="btn-edit" onclick="editEntry(\''+e.id+'\')">Edit</button>' +
       '</div>' +
     '</div>';
   container.appendChild(el);
@@ -348,7 +368,7 @@ function editEntry(eid) {
   el.className='entry-card'; el.id=id; el.setAttribute('data-rating',found.r||0);
   el.innerHTML=
     '<div class="card-header" onclick="toggleCard(\''+id+'\')">' +
-      '<div class="card-header-left"><div class="entry-num" style="background:var(--warning)">&#9998;</div><h3>Editing</h3></div>' +
+      '<div class="card-header-left"><div class="entry-num" style="background:var(--warning)"></div><h3>Editing Reflection</h3></div>' +
       '<div style="display:flex;align-items:center;gap:8px"><span class="card-time">'+fmtTime(found.ts)+'</span><span class="collapse-icon">&#9662;</span></div>' +
     '</div>' +
     '<div class="card-body">' +
@@ -384,7 +404,7 @@ function saveEdit(id,origTs) {
 function renderHistory() {
   var list=document.getElementById('historyList');
   list.innerHTML='';
-  if (!entries.length) { list.innerHTML='<div class="empty-state"><div class="emoji">&#127807;</div>No entries yet.</div>'; return; }
+  if (!entries.length) { list.innerHTML='<div class="empty-state"><div class="emoji">&#129504;</div>No entries yet.</div>'; return; }
   var sorted=entries.slice().sort(function(a,b){ return b.ts-a.ts; });
   var groups={}, dates=[];
   for (var i=0;i<sorted.length;i++) {
@@ -395,11 +415,11 @@ function renderHistory() {
   dates.sort(function(a,b){ return b.localeCompare(a); });
   for (var di=0;di<dates.length;di++) {
     var date=dates[di];
-    var grp=groups[date].sort(function(a,b){ return a.ts-b.ts; });
+    var grp=groups[date].sort(function(a,b){ return b.ts-a.ts; });
     var g=document.createElement('div');
     g.className='hist-date-group';
     g.innerHTML='<div class="hist-date-label">'+fmtDate(date)+' &middot; '+grp.length+' entr'+(grp.length===1?'y':'ies')+'</div>';
-    for (var gi=0;gi<grp.length;gi++) buildSavedCard(g,grp[gi],gi+1,false);
+    for (var gi=0;gi<grp.length;gi++) buildSavedCard(g,grp[gi],grp.length-gi,false);
     list.appendChild(g);
   }
 }

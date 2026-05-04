@@ -64,11 +64,57 @@
     .ex-input{flex:1;font-size:var(--base);font-weight:500;}
     .ex-input::placeholder{color:var(--muted);}
 
+    /* EXERCISE EDIT MODE */
+    .ex-edit-bar{display:none;align-items:center;justify-content:space-between;margin-bottom:var(--s3);padding:var(--s2) var(--s3);background:var(--surface);border:1px solid var(--border-hi);border-radius:var(--r-lg);}
+    .ex-edit-bar.show{display:flex;}
+    .ex-edit-label{font-size:var(--xs);font-weight:700;color:var(--accent);}
+    .ex-edit-done{font-size:var(--xs);font-weight:700;color:var(--accent);padding:var(--s1) var(--s3);border:1.5px solid var(--accent);border-radius:var(--r-full);background:var(--accent-dim);}
+    .ex-edit-chips{display:flex;flex-wrap:wrap;gap:var(--s2);padding:2px 1px;margin-bottom:var(--s3);}
+    .ex-edit-chip{display:inline-flex;align-items:center;gap:6px;padding:var(--s2) var(--s2) var(--s2) var(--s3);background:var(--surface);border:1.5px solid var(--border-hi);border-radius:var(--r-full);font-size:var(--sm);font-weight:600;color:var(--text);white-space:nowrap;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;}
+    .ex-edit-chip.dragging{opacity:0.4;cursor:grabbing;}
+    .ex-edit-chip.drag-over{border-color:var(--accent);background:var(--accent-dim);}
+    .ex-edit-chip-del{width:18px;height:18px;border-radius:50%;background:rgba(239,68,68,0.15);color:var(--error);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;line-height:1;}
+    .ex-edit-chip-del:active{background:rgba(239,68,68,0.35);}
+    .ex-edit-chip-grip{color:var(--muted);opacity:0.4;font-size:10px;letter-spacing:-1px;line-height:1;}
+
     /* BAR */
     .bar-row{display:flex;gap:var(--s2);margin-bottom:var(--s4);}
     .bar-chip{flex:1;padding:var(--s2);border:1.5px solid var(--border);border-radius:var(--r-full);font-size:var(--sm);font-weight:700;color:var(--muted);text-align:center;transition:all var(--ease);min-height:38px;}
     .bar-chip.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
     .bar-chip:active{transform:scale(0.96);}
+
+    /* MODE TOGGLE */
+    .mode-toggle{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-full);padding:3px;margin-bottom:var(--s4);}
+    .mode-btn{flex:1;padding:var(--s2) var(--s3);border-radius:var(--r-full);font-size:var(--sm);font-weight:700;color:var(--muted);text-align:center;transition:all var(--ease);display:flex;align-items:center;justify-content:center;gap:6px;}
+    .mode-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(59,130,246,0.35);}
+    .mode-btn:active{transform:scale(0.97);}
+
+    /* DUMBBELL UI */
+    .db-weight-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-2xl);padding:var(--s4);margin-bottom:var(--s4);}
+    .db-stepper{display:flex;align-items:center;gap:var(--s2);margin-bottom:var(--s3);}
+    .db-step-btn{width:52px;height:52px;background:var(--surface-2);border:1px solid var(--border-hi);border-radius:var(--r-lg);font-size:24px;font-weight:300;color:var(--text);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all var(--ease);}
+    .db-step-btn:active{background:var(--surface-3);}
+    .db-weight-display{flex:1;text-align:center;}
+    .db-weight-num{font-size:2.8rem;font-weight:700;letter-spacing:-0.04em;line-height:1;font-variant-numeric:tabular-nums;}
+    .db-weight-sub{font-size:var(--xs);color:var(--muted);margin-top:3px;}
+    .db-quick-btn:active{transform:scale(0.95);}
+
+    /* EXERCISE STATS */
+    .ex-stats-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;}
+    .ex-stats-row{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) var(--s4);}
+    .ex-stats-icon{width:28px;height:28px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .ex-stats-icon.pb{background:rgba(250,204,21,0.12);}
+    .ex-stats-icon.recent{background:var(--surface-2);}
+    .ex-stats-body{flex:1;min-width:0;}
+    .ex-stats-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:2px;}
+    .ex-stats-val{font-size:var(--sm);font-weight:700;color:var(--text);}
+    .ex-stats-val span{font-weight:400;color:var(--muted);}
+    .ex-stat-divider{height:1px;background:var(--border);margin:0 var(--s4);}
+    
+    .db-viz{display:flex;align-items:center;justify-content:center;gap:var(--s4);height:56px;margin:var(--s3) 0;}
+    .db-count-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:var(--s2) var(--s3);background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--r-lg);font-size:var(--xs);font-weight:700;color:var(--muted);transition:all var(--ease);min-height:44px;}
+    .db-count-btn.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
+    .db-count-btn:active{transform:scale(0.96);}
 
     /* WEIGHT CARD */
     .weight-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-2xl);padding:var(--s5) var(--s4) var(--s4);margin-bottom:var(--s4);text-align:center;}
@@ -193,15 +239,15 @@
     .add-plate-btn{width:100%;padding:var(--s3);background:var(--accent);color:#fff;font-weight:700;font-size:var(--sm);border-radius:var(--r-lg);transition:all var(--ease);min-height:46px;}
     .add-plate-btn:active{background:var(--accent-h);}
 
-    /* EMPTY */
     .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem var(--s8);text-align:center;color:var(--muted);gap:var(--s3);}
     .empty svg{color:var(--faint);}
     .empty h3{color:var(--text);font-size:var(--base);}
     .empty p{font-size:var(--sm);max-width:28ch;line-height:1.6;}
 
     /* TOAST */
-    .toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--surface-3);border:1px solid var(--border-hi);color:var(--text);padding:var(--s2) var(--s5);border-radius:var(--r-full);font-size:var(--xs);font-weight:600;opacity:0;transition:all 200ms ease;pointer-events:none;z-index:99;white-space:nowrap;max-width:90vw;}
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--surface-3);border:1px solid var(--border-hi);color:var(--text);padding:var(--s2) var(--s4);border-radius:var(--r-full);font-size:var(--xs);font-weight:600;opacity:0;transition:all 200ms ease;pointer-events:none;z-index:99;white-space:nowrap;max-width:90vw;display:flex;align-items:center;gap:var(--s3);}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+    .toast-action{color:var(--accent);font-weight:800;padding:2px 0;border-left:1px solid var(--border-hi);padding-left:var(--s3);}
   
     /* Rest Timer */
     .rest-btn{display:flex;align-items:center;justify-content:center;gap:var(--s2);width:100%;padding:var(--s3);background:var(--surface);border:1.5px solid var(--border-hi);border-radius:var(--r-lg);color:var(--muted);font-size:var(--sm);font-weight:600;margin-top:var(--s2);margin-bottom:var(--s5);transition:all var(--ease);}
@@ -275,26 +321,119 @@
     <!-- WORKOUT -->
     <section class="view active" id="view-workout">
       <div class="section-label">Exercise</div>
-      <div class="ex-chips-wrap">
+
+
+      <!-- All / filtered chips -->
+      <div class="ex-chips-wrap" id="ex-chips-wrap">
         <div class="ex-chips" id="ex-chips"></div>
       </div>
-      <div class="ex-input-wrap">
+
+      <!-- Edit mode -->
+      <div class="ex-edit-bar" id="ex-edit-bar">
+        <span class="ex-edit-label">✦ Edit exercises — drag to reorder</span>
+        <button class="ex-edit-done" onclick="exitExEditMode()">Done</button>
+      </div>
+      <div id="ex-edit-chips-wrap" style="display:none;">
+        <div class="ex-edit-chips" id="ex-edit-chips"></div>
+      </div>
+
+      <!-- Search + add exercise input -->
+      <div class="ex-input-wrap" id="ex-input-wrap">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
-          <line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/>
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
-        <input class="ex-input" id="ex-input" type="text" placeholder="Or type exercise name…"
-          autocomplete="off" spellcheck="false" oninput="onExInput()">
+        <input class="ex-input" id="ex-input" type="text" placeholder="Search or type exercise…"
+          autocomplete="off" spellcheck="false" oninput="onExInput()" onfocus="onExInputFocus()">
+        <button onclick="addCustomExercise()" style="display:none;flex-shrink:0;border-color:var(--accent);background:var(--accent-dim);color:var(--accent);" class="ex-chip" id="ex-add-btn">Add</button>
       </div>
 
-      <div class="section-label">Bar</div>
-      <div class="bar-row" id="bar-row">
-        <button class="bar-chip" data-bar="10" onclick="selectBar(10)">10 kg</button>
-        <button class="bar-chip" data-bar="15" onclick="selectBar(15)">15 kg</button>
-        <button class="bar-chip active" data-bar="20" onclick="selectBar(20)">20 kg</button>
+      <!-- Exercise stats (shown when exercise is selected) -->
+      <div id="ex-stats" style="display:none;margin-bottom:var(--s4);">
+        <div class="ex-stats-card">
+          <div class="ex-stats-row" id="ex-stat-pb"></div>
+          <div class="ex-stat-divider" id="ex-stat-divider"></div>
+          <div class="ex-stats-row" id="ex-stat-recent"></div>
+        </div>
       </div>
 
-      <div class="weight-card">
+      <!-- Mode toggle -->
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="mode-btn-bar" onclick="setMode('bar')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="9" x2="2" y2="15" stroke-width="3"/><line x1="5" y1="7" x2="5" y2="17" stroke-width="3"/><line x1="19" y1="7" x2="19" y2="17" stroke-width="3"/><line x1="22" y1="9" x2="22" y2="15" stroke-width="3"/></svg>
+          Barbell
+        </button>
+        <button class="mode-btn" id="mode-btn-db" onclick="setMode('db')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="1" width="8" height="4" rx="1.5"/><rect x="9.5" y="5" width="5" height="4" rx="1"/><rect x="9.5" y="15" width="5" height="4" rx="1"/><rect x="8" y="19" width="8" height="4" rx="1.5"/><line x1="12" y1="9" x2="12" y2="15"/></svg>
+          Dumbbell
+        </button>
+      </div>
+
+      <!-- Barbell panel -->
+      <div id="panel-bar">
+        <div class="section-label">Bar weight</div>
+        <div class="bar-row" id="bar-row">
+          <button class="bar-chip" data-bar="10" onclick="selectBar(10)">10 kg</button>
+          <button class="bar-chip" data-bar="15" onclick="selectBar(15)">15 kg</button>
+          <button class="bar-chip active" data-bar="20" onclick="selectBar(20)">20 kg</button>
+        </div>
+      </div>
+
+      <!-- Dumbbell panel -->
+      <div id="panel-db" style="display:none;">
+        <div class="db-weight-card">
+          <!-- Count toggle -->
+          <div style="display:flex;gap:var(--s2);margin-bottom:var(--s4);">
+            <button id="db-count-1" class="db-count-btn" onclick="setDBCount(1)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="8" y="1" width="8" height="4" rx="1.5"/>
+                <rect x="9.5" y="5" width="5" height="4" rx="1"/>
+                <rect x="9.5" y="15" width="5" height="4" rx="1"/>
+                <rect x="8" y="19" width="8" height="4" rx="1.5"/>
+                <line x1="12" y1="9" x2="12" y2="15"/>
+              </svg>
+              1 Dumbbell
+            </button>
+            <button id="db-count-2" class="db-count-btn active" onclick="setDBCount(2)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="8" y="1" width="8" height="4" rx="1.5"/>
+                <rect x="9.5" y="5" width="5" height="4" rx="1"/>
+                <rect x="9.5" y="15" width="5" height="4" rx="1"/>
+                <rect x="8" y="19" width="8" height="4" rx="1.5"/>
+                <line x1="12" y1="9" x2="12" y2="15"/>
+              </svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="8" y="1" width="8" height="4" rx="1.5"/>
+                <rect x="9.5" y="5" width="5" height="4" rx="1"/>
+                <rect x="9.5" y="15" width="5" height="4" rx="1"/>
+                <rect x="8" y="19" width="8" height="4" rx="1.5"/>
+                <line x1="12" y1="9" x2="12" y2="15"/>
+              </svg>
+              2 Dumbbells
+            </button>
+          </div>
+          <!-- Stepper -->
+          <div class="db-stepper">
+            <button class="db-step-btn" onclick="stepDB(-1)">&#8722;</button>
+            <div class="db-weight-display">
+              <div class="db-weight-num"><span id="db-wt-num">20</span> <span style="font-size:var(--base);font-weight:400;color:var(--muted);">kg</span></div>
+              <div class="db-weight-sub" id="db-wt-sub">per dumbbell · 40 kg total</div>
+            </div>
+            <button class="db-step-btn" onclick="stepDB(1)">+</button>
+          </div>
+          <!-- Quick chips + custom input -->
+          <div class="ex-chips-wrap" style="margin-bottom:var(--s3);">
+            <div class="ex-chips" id="db-quick" style="width:max-content;"></div>
+          </div>
+          <!-- Custom weight input -->
+          <div class="ex-input-wrap" style="margin-bottom:0;padding:var(--s2) var(--s3);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.4;flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <input id="db-custom-inp" type="number" inputmode="decimal" step="0.5" min="0.5" placeholder="Custom weight (kg)…"
+              style="flex:1;font-size:var(--sm);font-weight:500;" oninput="onDBCustomInput()" onkeydown="onDBCustomKey(event)">
+          </div>
+        </div>
+      </div>
+
+      <div class="weight-card" id="weight-card-bar">
         <div class="weight-num" id="wt-num">20.0 <span class="weight-unit">kg</span></div>
         <div class="weight-break" id="wt-break">Bar 20 kg · 0 kg per side</div>
         <div class="bb-wrap" id="bb-viz"></div>
@@ -305,10 +444,10 @@
         </div>
       </div>
 
-      <div class="picker-label">Tap plate to add (per side)</div>
-      <div class="plates-grid" id="plates-grid"></div>
-
-
+      <div id="plate-picker-section">
+        <div class="picker-label">Tap plate to add (per side)</div>
+        <div class="plates-grid" id="plates-grid"></div>
+      </div>
 
       <div class="reps-row">
         <span class="reps-label-big">Reps</span>
@@ -545,24 +684,27 @@
 const EXERCISES=['Deadlift','Squat','Bench Press','Hip Thrust','Overhead Press','Barbell Row','Romanian DL','Incline Bench','Front Squat','Close-Grip Bench'];
 const COLORS=['#e0e0e0','#4ade80','#f87171','#facc15','#60a5fa','#c084fc','#f97316','#2dd4bf','#fb923c','#94a3b8','#f9a8d4','#a3e635'];
 
+const DEFAULT_PLATES=[
+  {id:'p01',weight:1,   label:'1',    color:'#27ae60', size:'sm'},
+  {id:'p02',weight:1.25,label:'1.25', color:'#1a1a1a', size:'sm'},
+  {id:'p03',weight:1.5, label:'1.5',  color:'#f1c40f', size:'sm'},
+  {id:'p04',weight:2,   label:'2',    color:'#2980b9', size:'md'},
+  {id:'p05',weight:2.5, label:'2.5',  color:'#683013', size:'md'},
+  {id:'p06',weight:2.5, label:'2.5',  color:'#1a1a1a', size:'md'},
+  {id:'p07',weight:2.5, label:'2.5',  color:'#e53935', size:'lg'},
+  {id:'p08',weight:2.5, label:'2.5',  color:'#c74123', size:'md'},
+  {id:'p09',weight:5,   label:'5',    color:'#1a1a1a', size:'lg'},
+  {id:'p10',weight:5,   label:'5',    color:'#f0f0f0', size:'lg'},
+  {id:'p11',weight:5,   label:'5',    color:'#f0f0f0', size:'md'},
+  {id:'p12',weight:10,  label:'10',   color:'#27ae60', size:'lg'},
+  {id:'p13',weight:15,  label:'15',   color:'#2980b9', size:'lg'},
+  {id:'p14',weight:20,  label:'20',   color:'#c74123', size:'lg'},
+];
+
 let S={
   barWeight:20, selected:{}, plateLog:[], reps:8, sets:[], history:[], activeEx:'', newColor:'#4ade80',
-  plates:[
-    {id:'p01',weight:1,   label:'1',    color:'#27ae60', size:'sm'},
-    {id:'p02',weight:1.25,label:'1.25', color:'#1a1a1a', size:'sm'},
-    {id:'p03',weight:1.5, label:'1.5',  color:'#f1c40f', size:'sm'},
-    {id:'p04',weight:2,   label:'2',    color:'#2980b9', size:'md'},
-    {id:'p05',weight:2.5, label:'2.5',  color:'#683013', size:'md'},
-    {id:'p06',weight:2.5, label:'2.5',  color:'#1a1a1a', size:'md'},
-    {id:'p07',weight:2.5, label:'2.5',  color:'#e53935', size:'lg'},
-    {id:'p08',weight:2.5, label:'2.5',  color:'#c74123', size:'md'},
-    {id:'p09',weight:5,   label:'5',    color:'#1a1a1a', size:'lg'},
-    {id:'p10',weight:5,   label:'5',    color:'#f0f0f0', size:'lg'},
-    {id:'p11',weight:5,   label:'5',    color:'#f0f0f0', size:'md'},
-    {id:'p12',weight:10,  label:'10',   color:'#27ae60', size:'lg'},
-    {id:'p13',weight:15,  label:'15',   color:'#2980b9', size:'lg'},
-    {id:'p14',weight:20,  label:'20',   color:'#c74123', size:'lg'},
-  ]
+  customExercises:[], recentExercises:[], hiddenExercises:[], mode:'bar', dbWeight:20, dbCount:2,
+  plates: DEFAULT_PLATES.map(p=>({...p}))
 };
 
 const STORAGE_KEY='platestack_v1';
@@ -573,7 +715,13 @@ function saveData(){
       history: S.history,
       plates: S.plates,
       barWeight: S.barWeight,
-      reps: S.reps
+      reps: S.reps,
+      customExercises: S.customExercises,
+      recentExercises: S.recentExercises,
+      hiddenExercises: S.hiddenExercises,
+      mode: S.mode,
+      dbWeight: S.dbWeight,
+      dbCount: S.dbCount
     }));
   }catch(e){}
 }
@@ -587,6 +735,12 @@ function loadData(){
     if(d.plates)  S.plates=d.plates;
     if(d.barWeight) S.barWeight=d.barWeight;
     if(typeof d.reps==='number') S.reps=d.reps;
+    if(Array.isArray(d.customExercises)) S.customExercises=d.customExercises;
+    if(Array.isArray(d.recentExercises)) S.recentExercises=d.recentExercises;
+    if(Array.isArray(d.hiddenExercises)) S.hiddenExercises=d.hiddenExercises;
+    if(d.mode) S.mode=d.mode;
+    if(typeof d.dbWeight==='number') S.dbWeight=d.dbWeight;
+    if(typeof d.dbCount==='number') S.dbCount=d.dbCount;
   }catch(e){}
 }
 
@@ -624,7 +778,10 @@ function importData(){
 
 
 
-function totalW(){return S.barWeight+perSide()*2;}
+function totalW(){
+  if(S.mode==='db') return S.dbWeight*(S.dbCount||2);
+  return S.barWeight+perSide()*2;
+}
 function perSide(){
   return Object.entries(S.selected).reduce((s,[id,n])=>{
     const p=S.plates.find(x=>x.id===id);return s+(p?p.weight*n:0);},0);
@@ -636,20 +793,344 @@ function fmtW(w){
 }
 
 /* Exercise */
-function renderExChips(){
-  const row=document.getElementById('ex-chips');row.innerHTML='';
-  EXERCISES.forEach(ex=>{
-    const b=document.createElement('button');
-    b.className='ex-chip'+(S.activeEx===ex?' active':'');
-    b.textContent=ex;b.onclick=()=>selectEx(ex);row.appendChild(b);
+let exEditMode=false;
+let dragSrcEx=null;
+
+function allExercises(){
+  const hidden=new Set(S.hiddenExercises||[]);
+  return [...new Set([...EXERCISES, ...S.customExercises])].filter(e=>!hidden.has(e));
+}
+
+function removeExercise(name){
+  const isDefault=EXERCISES.includes(name);
+  if(isDefault){
+    S.hiddenExercises=[...(S.hiddenExercises||[]),name];
+  } else {
+    S.customExercises=S.customExercises.filter(e=>e!==name);
+  }
+  S.recentExercises=S.recentExercises.filter(e=>e!==name);
+  if(S.activeEx===name){S.activeEx='';document.getElementById('ex-input').value='';}
+  saveData();
+  renderExEditChips();
+  showToast('"'+name+'" removed');
+}
+
+function enterExEditMode(){
+  exEditMode=true;
+  document.getElementById('ex-chips-wrap').style.display='none';
+  document.getElementById('ex-input-wrap').style.display='none';
+  document.getElementById('ex-edit-bar').classList.add('show');
+  document.getElementById('ex-edit-chips-wrap').style.display='block';
+  renderExEditChips();
+}
+
+function exitExEditMode(){
+  exEditMode=false;
+  document.getElementById('ex-chips-wrap').style.display='';
+  document.getElementById('ex-input-wrap').style.display='';
+  document.getElementById('ex-edit-bar').classList.remove('show');
+  document.getElementById('ex-edit-chips-wrap').style.display='none';
+  renderExChips();
+}
+
+function renderExEditChips(){
+  const container=document.getElementById('ex-edit-chips');
+  container.innerHTML='';
+  // Show all exercises — default + custom. Only custom can be deleted; all can be reordered via customExercises list.
+  allExercises().forEach(ex=>{
+    const chip=document.createElement('div');
+    chip.className='ex-edit-chip';
+    chip.draggable=true;
+    chip.dataset.ex=ex;
+    chip.innerHTML=`
+      <span class="ex-edit-chip-grip">⠿</span>
+      <span style="flex:1;">${ex}</span>
+      <button class="ex-edit-chip-del" onclick="removeExercise('${ex.replace(/'/g,"\\'")}')">&#10005;</button>
+    `;
+
+    // Drag events (desktop)
+    chip.addEventListener('dragstart',e=>{dragSrcEx=ex;chip.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    chip.addEventListener('dragend',()=>{chip.classList.remove('dragging');document.querySelectorAll('.ex-edit-chip').forEach(c=>c.classList.remove('drag-over'));});
+    chip.addEventListener('dragover',e=>{e.preventDefault();chip.classList.add('drag-over');});
+    chip.addEventListener('dragleave',()=>chip.classList.remove('drag-over'));
+    chip.addEventListener('drop',e=>{e.preventDefault();chip.classList.remove('drag-over');reorderEx(dragSrcEx,ex);});
+
+    // Touch drag (mobile)
+    let touchDragEl=null,touchClone=null;
+    chip.addEventListener('touchstart',e=>{
+      touchDragEl=chip;
+      const t=e.touches[0];
+      touchClone=chip.cloneNode(true);
+      touchClone.style.cssText=`position:fixed;top:${t.clientY-20}px;left:${t.clientX-40}px;opacity:0.85;pointer-events:none;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,0.4);`;
+      document.body.appendChild(touchClone);
+      chip.classList.add('dragging');
+    },{passive:true});
+    chip.addEventListener('touchmove',e=>{
+      if(!touchClone)return;
+      const t=e.touches[0];
+      touchClone.style.top=t.clientY-20+'px';
+      touchClone.style.left=t.clientX-40+'px';
+      document.querySelectorAll('.ex-edit-chip').forEach(c=>c.classList.remove('drag-over'));
+      const el=document.elementFromPoint(t.clientX,t.clientY);
+      const target=el&&el.closest('.ex-edit-chip');
+      if(target&&target!==chip) target.classList.add('drag-over');
+    },{passive:true});
+    chip.addEventListener('touchend',e=>{
+      if(touchClone){document.body.removeChild(touchClone);touchClone=null;}
+      chip.classList.remove('dragging');
+      const t=e.changedTouches[0];
+      const el=document.elementFromPoint(t.clientX,t.clientY);
+      const target=el&&el.closest('.ex-edit-chip');
+      document.querySelectorAll('.ex-edit-chip').forEach(c=>c.classList.remove('drag-over'));
+      if(target&&target!==chip) reorderEx(ex,target.dataset.ex);
+    });
+
+    container.appendChild(chip);
   });
 }
-function selectEx(name){
-  S.activeEx=name;document.getElementById('ex-input').value=name;renderExChips();
+
+function reorderEx(fromEx,toEx){
+  if(fromEx===toEx)return;
+  const all=allExercises();
+  const fromIdx=all.indexOf(fromEx),toIdx=all.indexOf(toEx);
+  if(fromIdx<0||toIdx<0)return;
+  // Rebuild customExercises to reflect new full order
+  const reordered=[...all];
+  reordered.splice(fromIdx,1);
+  reordered.splice(toIdx,0,fromEx);
+  // Extract which ones are custom in new order
+  const defaultSet=new Set(EXERCISES);
+  S.customExercises=reordered.filter(e=>!defaultSet.has(e)||S.customExercises.includes(e));
+  // Also re-anchor default exercises by storing overridden order as fully custom list
+  // Strategy: store ALL exercises as custom order if user has reordered
+  S.customExercises=reordered.filter(e=>S.customExercises.includes(e)||(defaultSet.has(e)&&reordered.indexOf(e)!==EXERCISES.indexOf(e)));
+  saveData();
+  renderExEditChips();
 }
+
+function renderExChips(){
+  if(exEditMode)return;
+  const query=(document.getElementById('ex-input')||{}).value||'';
+  const q=query.trim().toLowerCase();
+  const all=allExercises();
+
+  // When not searching: recents float to front, rest follow deduped
+  let ordered;
+  if(q){
+    ordered=all.filter(ex=>ex.toLowerCase().includes(q));
+  } else {
+    const recentSet=new Set(S.recentExercises.filter(e=>all.includes(e)));
+    const recents=[...recentSet];
+    const rest=all.filter(e=>!recentSet.has(e));
+    ordered=[...recents,...rest];
+  }
+
+  const row=document.getElementById('ex-chips');row.innerHTML='';
+  ordered.forEach(ex=>{
+    const b=document.createElement('button');
+    b.className='ex-chip'+(S.activeEx===ex?' active':'');
+    b.textContent=ex;
+    b.onclick=()=>selectEx(ex);
+
+    // Long press → edit mode
+    let _lp;
+    b.addEventListener('mousedown',()=>{_lp=setTimeout(()=>enterExEditMode(),500);});
+    b.addEventListener('mouseup',()=>clearTimeout(_lp));
+    b.addEventListener('mouseleave',()=>clearTimeout(_lp));
+    b.addEventListener('touchstart',()=>{_lp=setTimeout(()=>{navigator.vibrate&&navigator.vibrate(30);enterExEditMode();},500);},{passive:true});
+    b.addEventListener('touchend',()=>clearTimeout(_lp));
+    b.addEventListener('touchmove',()=>clearTimeout(_lp),{passive:true});
+
+    row.appendChild(b);
+  });
+
+  if(q && ordered.length===0){
+    const hint=document.createElement('span');
+    hint.style.cssText='font-size:var(--xs);color:var(--muted);padding:var(--s2) var(--s1);white-space:nowrap;';
+    hint.textContent='No match — tap Add to create';
+    row.appendChild(hint);
+  }
+
+  const addBtn=document.getElementById('ex-add-btn');
+  const isNew=q && !all.some(e=>e.toLowerCase()===q);
+  addBtn.style.display=isNew?'flex':'none';
+  if(isNew) addBtn.textContent='Add "'+query.trim()+'"';
+}
+
+function selectEx(name){
+  if(exEditMode)return;
+  S.activeEx=name;
+  document.getElementById('ex-input').value=name;
+  S.recentExercises=S.recentExercises.filter(e=>e!==name);
+  S.recentExercises.unshift(name);
+  if(S.recentExercises.length>10) S.recentExercises.pop();
+  saveData();
+  renderExChips();
+  renderExStats(name);
+}
+
+function renderExStats(name){
+  const wrap=document.getElementById('ex-stats');
+  if(!name){wrap.style.display='none';return;}
+
+  // Gather all sets for this exercise from history
+  const allSets=[];
+  S.history.forEach(day=>{
+    day.exercises.forEach(ex=>{
+      if(ex.name===name) ex.sets.forEach(s=>allSets.push({...s,date:day.date}));
+    });
+  });
+
+  if(!allSets.length){wrap.style.display='none';return;}
+
+  // PB — highest weight, tiebreak on reps
+  let pb=allSets.reduce((best,s)=>
+    (s.weight>best.weight||(s.weight===best.weight&&s.reps>best.reps))?s:best, allSets[0]);
+
+  // Most recent session sets (last history entry containing this exercise)
+  let recentSets=[], recentDate='';
+  for(let i=S.history.length-1;i>=0;i--){
+    const day=S.history[i];
+    const ex=day.exercises.find(e=>e.name===name);
+    if(ex){recentSets=ex.sets;recentDate=day.date;break;}
+  }
+
+  const pbEl=document.getElementById('ex-stat-pb');
+  const recentEl=document.getElementById('ex-stat-recent');
+  const divider=document.getElementById('ex-stat-divider');
+
+  pbEl.innerHTML=`
+    <div class="ex-stats-icon pb">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#facc15" stroke="none"><path d="M2 20h20v2H2zM3 9l4 3 5-8 5 8 4-3-2 9H5z"/></svg>
+    </div>
+    <div class="ex-stats-body">
+      <div class="ex-stats-label">Personal Best</div>
+      <div class="ex-stats-val">${fmtW(pb.weight)} kg <span>× ${pb.reps} reps</span></div>
+    </div>`;
+
+  if(recentSets.length){
+    const recentStr=recentSets.map(s=>`${fmtW(s.weight)} kg × ${s.reps}`).join('  ·  ');
+    // Format date nicely
+    const d=new Date(recentDate);
+    const dateLabel=isNaN(d)?recentDate:d.toLocaleDateString('en-SG',{day:'numeric',month:'short'});
+    recentEl.innerHTML=`
+      <div class="ex-stats-icon recent">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 14"/></svg>
+      </div>
+      <div class="ex-stats-body">
+        <div class="ex-stats-label">Last session <span style="font-weight:400;text-transform:none;letter-spacing:0;">${dateLabel}</span></div>
+        <div class="ex-stats-val" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${recentStr}</div>
+      </div>`;
+    divider.style.display='block';
+    recentEl.style.display='flex';
+  } else {
+    divider.style.display='none';
+    recentEl.style.display='none';
+  }
+
+  wrap.style.display='block';
+}
+
 function onExInput(){
-  const v=document.getElementById('ex-input').value;S.activeEx=v;
-  document.querySelectorAll('.ex-chip').forEach(c=>c.classList.toggle('active',c.textContent===v));
+  const v=document.getElementById('ex-input').value;
+  S.activeEx=v.trim();
+  document.getElementById('ex-stats').style.display='none';
+  renderExChips();
+}
+
+function onExInputFocus(){
+  renderExChips();
+}
+
+function addCustomExercise(){
+  const inp=document.getElementById('ex-input');
+  const name=inp.value.trim();
+  if(!name) return;
+  if(allExercises().some(e=>e.toLowerCase()===name.toLowerCase())){showToast('Exercise already exists');return;}
+  S.customExercises.push(name);
+  saveData();
+  selectEx(name);
+  showToast('Exercise added!');
+}
+
+function removeCustomExercise(name){removeExercise(name);}
+
+/* Mode toggle */
+const DB_QUICK=[5,7.5,10,12.5,15,17.5,20,22.5,25,27.5,30,32.5,35,37.5,40,45,50];
+
+function setMode(mode){
+  S.mode=mode;
+  saveData();
+  document.getElementById('mode-btn-bar').classList.toggle('active',mode==='bar');
+  document.getElementById('mode-btn-db').classList.toggle('active',mode==='db');
+  document.getElementById('panel-bar').style.display=mode==='bar'?'':'none';
+  document.getElementById('panel-db').style.display=mode==='db'?'':'none';
+  document.getElementById('plate-picker-section').style.display=mode==='bar'?'':'none';
+  document.getElementById('weight-card-bar').style.display=mode==='bar'?'':'none';
+  if(mode==='db') renderDBPanel();
+  else{renderWeight();renderBBViz();}
+}
+
+function setDBCount(n){
+  S.dbCount=n;
+  saveData();
+  renderDBPanel();
+}
+
+function stepDB(d){
+  S.dbWeight=Math.max(0.5,Math.round((S.dbWeight+d)*2)/2);
+  document.getElementById('db-custom-inp').value='';
+  saveData();renderDBPanel();
+}
+
+function setDBWeight(w){
+  S.dbWeight=w;
+  document.getElementById('db-custom-inp').value='';
+  saveData();renderDBPanel();
+}
+
+function onDBCustomInput(){
+  const v=parseFloat(document.getElementById('db-custom-inp').value);
+  if(v>0){S.dbWeight=v;saveData();renderDBPanel(true);}
+}
+
+function onDBCustomKey(e){
+  if(e.key==='Enter'){document.getElementById('db-custom-inp').blur();}
+}
+
+function renderDBPanel(keepInput){
+  const w=S.dbWeight;
+  const n=S.dbCount||2;
+  const total=w*n;
+  document.getElementById('db-wt-num').textContent=fmtW(w);
+  document.getElementById('db-wt-sub').textContent=
+    n===1?`single dumbbell · ${fmtW(total)} kg total`:`${fmtW(w)} kg/side · ${fmtW(total)} kg total`;
+
+  // Count toggle
+  document.getElementById('db-count-1').classList.toggle('active',n===1);
+  document.getElementById('db-count-2').classList.toggle('active',n===2);
+
+  // Quick chips — use ex-chip style, scrollable row
+  const qc=document.getElementById('db-quick');
+  qc.innerHTML='';
+  const isCustom=!DB_QUICK.includes(w);
+  DB_QUICK.forEach(v=>{
+    const b=document.createElement('button');
+    b.className='ex-chip'+(v===w?' active':'');
+    b.textContent=v+'kg';
+    b.onclick=()=>setDBWeight(v);
+    qc.appendChild(b);
+  });
+  // If current weight is custom, show it highlighted too
+  if(isCustom){
+    const b=document.createElement('button');
+    b.className='ex-chip active';
+    b.textContent=fmtW(w)+'kg ✦';
+    b.onclick=()=>{};
+    qc.insertBefore(b,qc.firstChild);
+  }
+
+  if(!keepInput) document.getElementById('db-custom-inp').value='';
 }
 
 /* Bar */
@@ -792,7 +1273,7 @@ function changeReps(d){S.reps=Math.max(1,Math.min(99,S.reps+d));document.getElem
 /* Log set */
 function logSet(){
   const exercise=document.getElementById('ex-input').value.trim()||'Unnamed exercise';
-  S.sets.push({id:Date.now(),exercise,weight:totalW(),reps:S.reps,plates:{...S.selected},barWeight:S.barWeight});
+  S.sets.push({id:Date.now(),exercise,weight:totalW(),reps:S.reps,plates:{...S.selected},barWeight:S.barWeight,mode:S.mode,dbWeight:S.dbWeight,dbCount:S.dbCount||2});
   renderSets();
   // auto-start rest timer
   clearInterval(restInterval);restRunning=false;
@@ -835,10 +1316,11 @@ function renderSets(){
     const isSessionBest=sb&&(set.weight===sb.weight&&set.reps===sb.reps);
     const isPB=isSessionBest&&(isBetter(set,histBest)||(set.weight===histBest.weight&&set.reps===histBest.reps&&histBest.weight>0));
     const pbHtml=isPB?`<span class="pb-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="#facc15" stroke="none"><path d="M2 20h20v2H2zM3 9l4 3 5-8 5 8 4-3-2 9H5z"/></svg>PB</span>`:''
-;    const tr=document.createElement('tr');
+;    const weightLabel=set.mode==='db'&&(set.dbCount||2)===2?`${fmtW(set.dbWeight)} kg/side`:`${fmtW(set.weight)} kg`;
+    const tr=document.createElement('tr');
     tr.innerHTML=`
       <td class="td-num">${i+1}</td>
-      <td class="td-weight">${fmtW(set.weight)} kg${pbHtml}</td>
+      <td class="td-weight">${weightLabel}${pbHtml}</td>
       <td class="td-reps">\u00d7 ${set.reps}</td>
       <td class="td-del"><button class="del-btn" onclick="delSet(${i})" aria-label="Delete set ${i+1}">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -902,10 +1384,11 @@ function renderSets(){
     const isSessionBest=sb&&(set.weight===sb.weight&&set.reps===sb.reps);
     const isPB=isSessionBest&&(isBetter(set,histBest)||(set.weight===histBest.weight&&set.reps===histBest.reps&&histBest.weight>0));
     const pbHtml=isPB?`<span class="pb-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="#facc15" stroke="none"><path d="M2 20h20v2H2zM3 9l4 3 5-8 5 8 4-3-2 9H5z"/></svg>PB</span>`:''
-;    const tr=document.createElement('tr');
+;    const weightLabel=set.mode==='db'&&(set.dbCount||2)===2?`${fmtW(set.dbWeight)} kg/side`:`${fmtW(set.weight)} kg`;
+    const tr=document.createElement('tr');
     tr.innerHTML=`
       <td class="td-num">${i+1}</td>
-      <td class="td-weight">${fmtW(set.weight)} kg${pbHtml}</td>
+      <td class="td-weight">${weightLabel}${pbHtml}</td>
       <td class="td-reps">\u00d7 ${set.reps}</td>
       <td class="td-del"><button class="del-btn" onclick="delSet(${i})" aria-label="Delete set ${i+1}">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1194,54 +1677,46 @@ const QUICK_WEIGHTS=[1.25,2.5,5,10,15,20,25];
 
 function renderPlatesTab(){
   renderPlatesEditGrid();
-  renderSwatches('swatches', S.newColor, c=>{S.newColor=c;updatePreview();});
-  renderSizeChips('size-chips-add');
+  renderSwatches('ap-swatches', S.newColor, c=>{_apColor=c;updateAPPreview();});
   renderQuickWeights();
-  updatePreview();
+  updateAPPreview();
 }
 
 function renderQuickWeights(){
-  const el=document.getElementById('quick-weights');
+  const el=document.getElementById('ap-quick-weights');
   if(!el)return;
   el.innerHTML='';
   QUICK_WEIGHTS.forEach(w=>{
     const b=document.createElement('button');
     b.className='qw-chip';b.textContent=w+'kg';
     b.onclick=()=>{
-      document.getElementById('new-wt').value=w;
-      updatePreview();
+      document.getElementById('ap-wt').value=w;
+      updateAPPreview();
     };
     el.appendChild(b);
   });
 }
 
 function stepWeight(d){
-  const inp=document.getElementById('new-wt');
+  const inp=document.getElementById('ap-wt');
   const v=parseFloat(inp.value)||0;
   inp.value=Math.max(0.25,Math.round((v+d)*4)/4).toFixed(2);
-  updatePreview();
+  updateAPPreview();
 }
 
-function updatePreview(){
-  const w=parseFloat(document.getElementById('new-wt').value)||0;
-  const sz=plateSz(w||10,S.newSize);
+function updateAPPreview(){
+  const w=parseFloat(document.getElementById('ap-wt').value)||0;
+  const sz=plateSz(w||10,_apSize||'md');
   const numFs=sz<48?'11px':sz<64?'14px':sz<78?'16px':'18px';
   const kgFs =sz<50?'10px':sz<64?'11.5px':'13px';
-  const circle=document.getElementById('plate-preview-circle');
-  circle.innerHTML='';
-  const div=document.createElement('div');
-  const _pc=S.newColor.replace('#','');
-  const _pr=parseInt(_pc.slice(0,2),16),_pg=parseInt(_pc.slice(2,4),16),_pb=parseInt(_pc.slice(4,6),16);
-  const _plum=(0.299*_pr+0.587*_pg+0.114*_pb)/255;
-  const _pmx=Math.max(_pr,_pg,_pb),_pmn=Math.min(_pr,_pg,_pb),_psat=_pmx===0?0:(_pmx-_pmn)/_pmx;
-  const _pring=(_plum<0.18&&_psat<0.20)?'box-shadow:inset 0 0 0 1px rgba(255,255,255,0.22);':'';
-  div.style.cssText=`width:${sz}px;height:${sz}px;background:${S.newColor};border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;${_pring}`;
-  if(w){
-    div.innerHTML=`<span style="font-weight:800;font-size:${numFs};color:${plateTextColor(S.newColor)};line-height:1.15;">${w}</span><span style="font-weight:700;font-size:${kgFs};color:${plateKgColor(S.newColor)};line-height:1;">kg</span>`;
-  }
-  circle.appendChild(div);
-  document.getElementById('preview-weight-lbl').textContent=w?`${w} kg`:'New plate';
-  document.getElementById('preview-meta-lbl').textContent=w?`${w} kg plate`:'Enter a weight below';
+  const wrap=document.getElementById('add-plate-preview-wrap');
+  if(!wrap)return;
+  const color=_apColor||S.newColor||'#4ade80';
+  wrap.innerHTML='';
+  const outer=document.createElement('div');
+  outer.style.cssText=`width:${sz}px;height:${sz}px;background:${color};border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;${plateBorder(color)!=='1.5px solid transparent'?'box-shadow:inset 0 0 0 1px rgba(255,255,255,0.22);':''}`;
+  if(w){outer.innerHTML=`<span style="font-weight:800;font-size:${numFs};color:${plateTextColor(color)};line-height:1.15;">${w}</span><span style="font-weight:700;font-size:${kgFs};color:${plateKgColor(color)};line-height:1;">kg</span>`;}
+  wrap.appendChild(outer);
 }
 
 
@@ -1377,17 +1852,17 @@ function renderSwatches(containerId, selectedColor, onSelect){
 function selectSize(sz,btn){
   S.newSize=sz;
   document.querySelectorAll('#add-plate-form .size-chip').forEach(b=>b.classList.toggle('active',b.dataset.size===sz));
-  updatePreview();
+  updateAPPreview();
 }
 
 function addPlate(){
-  const w=parseFloat(document.getElementById('new-wt').value);
+  const w=parseFloat(document.getElementById('ap-wt').value);
   if(!w||w<=0||w>200){showToast('Enter a valid weight');return;}
   S.plates.push({id:'p'+Date.now(),weight:w,label:String(w),color:S.newColor,size:S.newSize});
-  document.getElementById('new-wt').value='';
+  document.getElementById('ap-wt').value='';
   renderPlatesEditGrid();
   renderPlatesGrid();
-  updatePreview();
+  updateAPPreview();
   saveData();showToast(`${w} kg plate added`);
 }
 
@@ -1454,12 +1929,9 @@ function deleteAllPlates(){
   if(!S.plates.length){showToast('No plates to delete');return;}
   if(!confirm('Delete all '+S.plates.length+' plates?')) return;
   S.plates=[];
-  S.selected={};
-  S.plateLog=[];
-  saveData();
-  refreshWorkout();
-  renderPlatesEditGrid();
-  showToast('All plates deleted');
+  S.selected={};S.plateLog=[];
+  saveData();refreshWorkout();renderPlatesEditGrid();
+  showToast('All plates deleted','Restore defaults',restoreDefaultPlates);
 }
 function deleteEditPlate(){
   if(!editingId)return;
@@ -1467,13 +1939,15 @@ function deleteEditPlate(){
   delete S.selected[editingId];
   closeEditModal();
   renderPlatesEditGrid();refreshWorkout();
-  showToast('Plate removed');
+  if(!S.plates.length) showToast('Last plate removed','Restore defaults',restoreDefaultPlates);
+  else showToast('Plate removed');
 }
 function deletePlate(id){
   S.plates=S.plates.filter(p=>p.id!==id);
   delete S.selected[id];
   renderPlatesEditGrid();refreshWorkout();
-  showToast('Plate removed');
+  if(!S.plates.length) showToast('Last plate removed','Restore defaults',restoreDefaultPlates);
+  else showToast('Plate removed');
 }
 
 /* Nav */
@@ -1493,9 +1967,25 @@ function fmtDate(str){
   return d.toLocaleDateString('en-SG',{weekday:'long',month:'short',day:'numeric'});
 }
 let _toast;
-function showToast(msg){
-  const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
-  clearTimeout(_toast);_toast=setTimeout(()=>el.classList.remove('show'),2400);
+function showToast(msg, actionLabel, actionFn){
+  const el=document.getElementById('toast');
+  el.innerHTML='';
+  const span=document.createElement('span');span.textContent=msg;el.appendChild(span);
+  if(actionLabel&&actionFn){
+    const btn=document.createElement('button');
+    btn.className='toast-action';btn.textContent=actionLabel;
+    btn.onclick=()=>{actionFn();el.classList.remove('show');};
+    el.appendChild(btn);
+  }
+  el.classList.add('show');
+  clearTimeout(_toast);_toast=setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+function restoreDefaultPlates(){
+  S.plates=DEFAULT_PLATES.map(p=>({...p}));
+  S.selected={};S.plateLog=[];
+  saveData();refreshWorkout();renderPlatesEditGrid();
+  showToast('Default plates restored');
 }
 
 // Init
@@ -1503,6 +1993,7 @@ function showToast(msg){
   document.getElementById('date-badge').textContent=
     new Date().toLocaleDateString('en-SG',{weekday:'short',month:'short',day:'numeric'});
   loadData();renderExChips();renderWeight();renderPlatesGrid();renderBBViz();renderRemoveStrip();renderHistory();
+  setMode(S.mode||'bar');
 })();
 
 /* Rest Timer */

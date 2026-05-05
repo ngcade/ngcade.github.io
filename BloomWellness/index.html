@@ -333,6 +333,18 @@ body::before {
 .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: 10px; color: var(--muted); cursor: pointer; padding: 4px 10px; border-radius: 10px; transition: color 0.2s; }
 .nav-item.active { color: var(--rose); }
 .nav-icon { font-size: 18px; }
+
+/* Quick log button */
+.quick-log-btn {
+  width: 100%; padding: 13px; border-radius: 14px;
+  border: 1.5px dashed rgba(185,122,87,0.35);
+  background: rgba(255,255,255,0.6);
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+  color: var(--rose); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.15s;
+}
+.quick-log-btn:active { background: rgba(242,202,187,0.35); border-color: var(--rose); }
 </style>
 <script src="https://unpkg.com/phosphor-icons@1.4.2"></script>
 </head>
@@ -368,13 +380,7 @@ body::before {
   <button class="darrow" onclick="shiftDate(1)">›</button>
 </div>
 
-<!-- TABS -->
-<div class="tabs">
-  <button class="tab active" onclick="switchTab('today')"><span class="tab-icon"><i class="ph-clipboard-text"></i></span>Today</button>
-  <button class="tab" onclick="switchTab('meals')"><span class="tab-icon"><i class="ph-fork-knife"></i></span>Meals</button>
-  <button class="tab" onclick="switchTab('move')"><span class="tab-icon"><i class="ph-barbell"></i></span>Move</button>
-  <button class="tab" onclick="switchTab('stats')"><span class="tab-icon"><i class="ph-chart-bar"></i></span>Stats</button>
-</div>
+
 
 <!-- TODAY -->
 <div class="section active" id="section-today">
@@ -398,12 +404,14 @@ body::before {
     <div class="ml-item"><div class="ml-dot" style="background:var(--h-poor)"></div>Indulgent</div>
   </div>
   <div id="mealJournal"></div>
+  <div style="padding: 0 24px 8px;"><button class="quick-log-btn" onclick="openQuickMealModal()"><i class="ph-plus"></i> Log a Meal</button></div>
 </div>
 
 <!-- MOVE -->
 <div class="section" id="section-move">
   <div class="sec-head">Movement Log</div>
   <div id="moveJournal"></div>
+  <div style="padding: 0 24px 8px;"><button class="quick-log-btn" onclick="openQuickMoveModal()"><i class="ph-plus"></i> Log a Workout</button></div>
 </div>
 
 <!-- STATS -->
@@ -444,7 +452,43 @@ body::before {
   </div>
 </div>
 
-<!-- MEAL MODAL -->
+<!-- QUICK LOG MEAL MODAL -->
+<div class="modal-overlay" id="quickMealModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><i class="ph-fork-knife"></i> Log a Meal</div>
+    <div class="ex-chips meal-type-chips" id="qmTypeChips">
+      <button class="ex-chip meal-type-chip on" onclick="selQMType(this)">Breakfast</button>
+      <button class="ex-chip meal-type-chip" onclick="selQMType(this)">Lunch</button>
+      <button class="ex-chip meal-type-chip" onclick="selQMType(this)">Dinner</button>
+      <button class="ex-chip meal-type-chip" onclick="selQMType(this)">Snack</button>
+    </div>
+    <div class="meal-health-row" id="qmHealthRow">
+      <button class="meal-h-chip mh-great on" data-h="great" onclick="selQMHealth(this)"><div class="mhdot"></div>Very healthy</button>
+      <button class="meal-h-chip mh-good" data-h="good" onclick="selQMHealth(this)"><div class="mhdot"></div>Good</button>
+      <button class="meal-h-chip mh-ok" data-h="ok" onclick="selQMHealth(this)"><div class="mhdot"></div>Okay</button>
+      <button class="meal-h-chip mh-poor" data-h="poor" onclick="selQMHealth(this)"><div class="mhdot"></div>Indulgent</button>
+    </div>
+    <input type="text" id="quickMealInput" placeholder="What did you eat?" onkeydown="if(event.key==='Enter')saveQuickMeal()">
+    <button class="modal-submit" onclick="saveQuickMeal()">Log Meal</button>
+    <button class="modal-cancel" onclick="closeQuickMealModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- QUICK LOG MOVE MODAL -->
+<div class="modal-overlay" id="quickMoveModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><i class="ph-barbell"></i> Log a Workout</div>
+    <div class="ex-chips" id="qeChips" style="margin-bottom:12px"></div>
+    <div class="ex-custom-row">
+      <input type="text" id="quickMoveInput" placeholder="What did you do?" onkeydown="if(event.key==='Enter')saveQuickMove()">
+      <button class="ex-custom-add" onclick="saveQuickMove()">+</button>
+    </div>
+    <button class="modal-submit" style="margin-top:10px" onclick="saveQuickMove()">Log Workout</button>
+    <button class="modal-cancel" onclick="closeQuickMoveModal()">Cancel</button>
+  </div>
+</div>
 
 <!-- GOAL MODAL -->
 <div class="modal-overlay" id="goalModal">
@@ -515,7 +559,7 @@ const hHex    = { great:'#5aa06a', good:'#8ab84a', ok:'#d4a832', poor:'#d06848' 
 const hLabels = { great:'Very healthy', good:'Pretty good', ok:'Okay', poor:'Indulgent' };
 const EX_TYPES = ['Walk','Yoga','Swim','Strength','Cardio','Other'];
 
-function dk(d) { return d.toISOString().split('T')[0]; }
+function dk(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function getDay(k) {
   if (!data[k]) data[k] = { meals:[], exercise:[], water:false, sleep:false, suppsDone:{} };
   return data[k];
@@ -1005,10 +1049,9 @@ function closePop() { document.querySelectorAll('.cal-pop,.pop-overlay').forEach
 const TABS = ['today','meals','move','stats'];
 function switchTab(name) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.tab,.nav-item').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('active'));
   document.getElementById('section-'+name).classList.add('active');
   const i = TABS.indexOf(name);
-  document.querySelectorAll('.tab')[i]?.classList.add('active');
   document.querySelectorAll('.nav-item')[i]?.classList.add('active');
   if (name==='stats') { renderCalendar(); }
   if (name==='meals'||name==='move') renderJournals();
@@ -1019,7 +1062,83 @@ updateDate();
 renderJournals();
 // Pre-render stats so chart shows when tab is opened
 setTimeout(() => { renderCalendar(); }, 0);
+
+// ===== QUICK LOG MODALS =====
+function openQuickMealModal() {
+  document.getElementById('quickMealModal').classList.add('open');
+  // reset
+  document.querySelectorAll('#qmTypeChips .meal-type-chip').forEach((b,i)=>b.classList.toggle('on',i===0));
+  document.querySelectorAll('#qmHealthRow .meal-h-chip').forEach((b,i)=>b.classList.toggle('on',i===0));
+  document.getElementById('quickMealInput').value = '';
+  setTimeout(()=>document.getElementById('quickMealInput').focus(), 300);
+}
+function closeQuickMealModal() {
+  document.getElementById('quickMealModal').classList.remove('open');
+}
+document.getElementById('quickMealModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('quickMealModal')) closeQuickMealModal();
+});
+function selQMType(btn) {
+  btn.closest('#qmTypeChips').querySelectorAll('.meal-type-chip').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function selQMHealth(btn) {
+  btn.closest('#qmHealthRow').querySelectorAll('.meal-h-chip').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function saveQuickMeal() {
+  const inp = document.getElementById('quickMealInput');
+  const name = inp.value.trim(); if (!name) { inp.focus(); return; }
+  const type = document.querySelector('#qmTypeChips .meal-type-chip.on')?.textContent.trim() || '';
+  const health = document.querySelector('#qmHealthRow .meal-h-chip.on')?.dataset.h || 'good';
+  const k = dk(viewDate);
+  getDay(k).meals.push({ type, name, health });
+  save(); closeQuickMealModal(); renderChecklist(); renderJournals(); renderCalendar();
+}
+
+function openQuickMoveModal() {
+  document.getElementById('quickMoveModal').classList.add('open');
+  document.getElementById('quickMoveInput').value = '';
+  // populate recent exercise chips
+  const k = dk(viewDate);
+  const todayEx = (data[k]?.exercise||[]).map(e=>e.type);
+  const recent = getRecentExerciseTypes([]);
+  document.getElementById('qeChips').innerHTML = recent.map(t => {
+    const on = todayEx.includes(t);
+    return `<button class="ex-chip ${on?'on':''}" onclick="quickLogExChip('${escJ(t)}')">${t}</button>`;
+  }).join('');
+  setTimeout(()=>document.getElementById('quickMoveInput').focus(), 300);
+}
+function closeQuickMoveModal() {
+  document.getElementById('quickMoveModal').classList.remove('open');
+}
+document.getElementById('quickMoveModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('quickMoveModal')) closeQuickMoveModal();
+});
+function quickLogExChip(type) {
+  const k = dk(viewDate);
+  const day = getDay(k);
+  const idx = day.exercise.findIndex(e=>e.type===type);
+  if (idx >= 0) day.exercise.splice(idx,1); else day.exercise.push({ type });
+  save(); renderChecklist(); renderJournals(); renderCalendar();
+  // refresh chips inside modal
+  const todayEx = day.exercise.map(e=>e.type);
+  document.querySelectorAll('#qeChips .ex-chip').forEach(btn => {
+    btn.classList.toggle('on', todayEx.includes(btn.textContent.trim()));
+  });
+}
+function saveQuickMove() {
+  const inp = document.getElementById('quickMoveInput');
+  const val = inp.value.trim();
+  if (val) {
+    const k = dk(viewDate);
+    const day = getDay(k);
+    if (!day.exercise.some(e=>e.type===val)) day.exercise.push({ type: val });
+    save(); inp.value = ''; renderChecklist(); renderJournals(); renderCalendar();
+  }
+  closeQuickMoveModal();
+}
+
 </script>
 </body>
 </html>
-

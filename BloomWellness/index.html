@@ -345,6 +345,51 @@ body::before {
   transition: all 0.15s;
 }
 .quick-log-btn:active { background: rgba(242,202,187,0.35); border-color: var(--rose); }
+
+/* Journal date row with edit button */
+.jcard-date-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:2px; }
+.jcard-edit-date {
+  background: none; border: none; cursor: pointer;
+  color: var(--muted); font-size: 14px; padding: 2px 4px;
+  border-radius: 6px; opacity: 0.6; transition: opacity 0.15s;
+  display: flex; align-items: center;
+}
+.jcard-edit-date:active { opacity: 1; color: var(--rose); }
+
+/* Day Edit Modal */
+.dedit-section-head {
+  font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  color: var(--muted); margin: 4px 0 8px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 5px;
+}
+.dedit-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid rgba(185,122,87,0.1);
+}
+.dedit-dot { width:10px;height:10px;border-radius:50%;flex-shrink:0; }
+.dedit-label { flex:1; display:flex; flex-direction:column; gap:1px; }
+.dedit-name { font-size:13px; font-weight:500; color:var(--ink); }
+.dedit-sub  { font-size:11px; color:var(--muted); }
+.dedit-del  { background:none;border:none;font-size:18px;color:var(--muted);cursor:pointer;padding:0 2px;line-height:1; }
+.dedit-del:active { color:var(--h-poor); }
+.dedit-add-section { margin-top:10px; }
+.dedit-toggles { display:flex; gap:8px; flex-wrap:wrap; }
+.dedit-toggle-btn {
+  flex:1; padding:10px 8px; border-radius:12px; border:1.5px solid rgba(185,122,87,0.2);
+  background:rgba(255,255,255,0.6); font-family:'DM Sans',sans-serif; font-size:13px;
+  font-weight:500; color:var(--muted); cursor:pointer; transition:all .15s;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.dedit-toggle-btn.on { background:var(--sage); color:#fff; border-color:var(--sage); }
+.dedit-supp-row { display:flex; flex-wrap:wrap; gap:8px; }
+.dedit-supp {
+  padding:7px 14px; border-radius:20px; border:1.5px solid rgba(185,122,87,0.2);
+  background:rgba(255,255,255,0.6); font-family:'DM Sans',sans-serif; font-size:13px;
+  font-weight:500; color:var(--muted); cursor:pointer; transition:all .15s;
+}
+.dedit-supp.on { background:var(--rose); color:#fff; border-color:var(--rose); }
+/* Allow tapping any calendar cell, not just ones with data */
+.cal-cell { cursor: pointer; }
 </style>
 <script src="https://unpkg.com/phosphor-icons@1.4.2"></script>
 </head>
@@ -452,6 +497,31 @@ body::before {
   </div>
 </div>
 
+<!-- DAY EDIT MODAL -->
+<div class="modal-overlay" id="dayEditModal">
+  <div class="modal" style="max-height:82vh;overflow-y:auto;padding-bottom:24px">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="dayEditTitle"></div>
+
+    <div class="dedit-section-head"><i class="ph-fork-knife"></i> Meals</div>
+    <div id="dayEditMeals"></div>
+
+    <div class="dedit-section-head" style="margin-top:16px"><i class="ph-barbell"></i> Exercise</div>
+    <div id="dayEditExercise"></div>
+
+    <div class="dedit-section-head" style="margin-top:16px"><i class="ph-check-circle"></i> Goals</div>
+    <div class="dedit-toggles">
+      <button class="dedit-toggle-btn" id="deditWaterToggle" onclick="dayEditToggleWater()"><i class="ph-drop"></i> Water</button>
+      <button class="dedit-toggle-btn" id="deditSleepToggle" onclick="dayEditToggleSleep()"><i class="ph-moon"></i> Sleep</button>
+    </div>
+
+    <div class="dedit-section-head" style="margin-top:16px"><i class="ph-pill"></i> Supplements</div>
+    <div class="dedit-supp-row" id="dayEditSupps"></div>
+
+    <button class="modal-cancel" style="margin-top:18px" onclick="closeDayEditModal()">Done</button>
+  </div>
+</div>
+
 <!-- QUICK LOG MEAL MODAL -->
 <div class="modal-overlay" id="quickMealModal">
   <div class="modal">
@@ -487,6 +557,18 @@ body::before {
     </div>
     <button class="modal-submit" style="margin-top:10px" onclick="saveQuickMove()">Log Workout</button>
     <button class="modal-cancel" onclick="closeQuickMoveModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- EDIT DATE MODAL -->
+<div class="modal-overlay" id="editDateModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><i class="ph-calendar"></i> Change Date</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Move these entries to a different date.</p>
+    <input type="date" id="editDateInput" style="width:100%;padding:12px;border-radius:12px;border:1.5px solid rgba(185,122,87,0.25);background:rgba(255,255,255,0.7);font-size:15px;font-family:'DM Sans',sans-serif;color:var(--ink);margin-bottom:4px">
+    <button class="modal-submit" onclick="saveEditDate()">Move Entries</button>
+    <button class="modal-cancel" onclick="closeEditDateModal()">Cancel</button>
   </div>
 </div>
 
@@ -912,7 +994,10 @@ function renderJournals() {
   const mEntries = Object.entries(data).sort((a,b)=>b[0].localeCompare(a[0])).filter(([,d])=>d.meals?.length);
   document.getElementById('mealJournal').innerHTML = mEntries.length
     ? mEntries.map(([k,d])=>`<div class="journal-card">
-        <div class="jcard-date">${new Date(k+'T00:00:00').toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'})}</div>
+        <div class="jcard-date-row">
+          <span class="jcard-date">${new Date(k+'T00:00:00').toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'})}</span>
+          <button class="jcard-edit-date" onclick="openEditDateModal('meals','${k}')" title="Change date"><i class="ph-pencil"></i></button>
+        </div>
         ${d.meals.map((m,i)=>`<div class="jcard-item">
           <div class="jcard-dot" style="background:${hColors[m.health]||'#ccc'}"></div>
           <span class="jcard-name">${m.name}</span>
@@ -925,7 +1010,10 @@ function renderJournals() {
   const eEntries = Object.entries(data).sort((a,b)=>b[0].localeCompare(a[0])).filter(([,d])=>d.exercise?.length);
   document.getElementById('moveJournal').innerHTML = eEntries.length
     ? eEntries.map(([k,d])=>`<div class="journal-card">
-        <div class="jcard-date">${new Date(k+'T00:00:00').toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'})}</div>
+        <div class="jcard-date-row">
+          <span class="jcard-date">${new Date(k+'T00:00:00').toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'})}</span>
+          <button class="jcard-edit-date" onclick="openEditDateModal('exercise','${k}')" title="Change date"><i class="ph-pencil"></i></button>
+        </div>
         ${d.exercise.map((e,i)=>`<div class="jcard-item">
           <div class="jcard-dot" style="background:var(--sage)"></div>
           <span class="jcard-name">${e.type||'Exercise'}</span>
@@ -990,7 +1078,7 @@ function renderCalendar() {
       <span class="cal-goal-lbl" style="opacity:${dSup}"><i class="ph-pill"></i></span>
     </div>`;
 
-    html += `<div class="cal-cell${isToday?' today':''}${hasAny?' has-data':''}" onclick="showPop('${k}',event)">
+    html += `<div class="cal-cell${isToday?' today':''}${hasAny?' has-data':''}" onclick="showPop('${k}')">
       <div class="cal-num">${d}</div>
       ${mealLines}
       ${dots}
@@ -1000,50 +1088,150 @@ function renderCalendar() {
   document.getElementById('calGrid').innerHTML = html;
 }
 
-// ===== CALENDAR POPOVER =====
-function showPop(k, event) {
-  closePop();
-  const day = data[k]; if (!day) return;
-  const has = (day.meals?.length||0)+(day.exercise?.length||0)>0||day.water||day.sleep||Object.values(day.suppsDone||{}).some(Boolean);
-  if (!has) return;
+// ===== CALENDAR POPOVER → DAY EDIT MODAL =====
+function showPop(k) { openDayEditModal(k); }
+function closePop() {}
 
-  const label = new Date(k+'T00:00:00').toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'});
-  let rows = '';
-  (day.meals||[]).forEach(m=>{
-    rows += `<div class="pop-row">
-      <div class="pop-meal-dot" style="background:${hHex[m.health]||'#ccc'}"></div>
-      <div style="flex:1">
-        <span style="font-weight:500">${m.name}</span>
-        <span style="font-size:10px;color:var(--muted);margin-left:5px">${hLabels[m.health]||''}</span>
+let _dayEditKey = null;
+
+function openDayEditModal(k) {
+  _dayEditKey = k;
+  renderDayEditModal();
+  document.getElementById('dayEditModal').classList.add('open');
+}
+function closeDayEditModal() {
+  document.getElementById('dayEditModal').classList.remove('open');
+  _dayEditKey = null;
+}
+document.getElementById('dayEditModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('dayEditModal')) closeDayEditModal();
+});
+
+function renderDayEditModal() {
+  const k = _dayEditKey;
+  const day = getDay(k);
+  const label = new Date(k+'T00:00:00').toLocaleDateString('en-SG',{weekday:'long',day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('dayEditTitle').textContent = label;
+
+  // --- Meals ---
+  const mealsHTML = (day.meals||[]).map((m,i)=>`
+    <div class="dedit-item">
+      <div class="dedit-dot" style="background:${hColors[m.health]||'#ccc'}"></div>
+      <div class="dedit-label">
+        <span class="dedit-name">${m.type ? m.type+': ':''} ${m.name}</span>
+        <span class="dedit-sub">${hLabels[m.health]||''}</span>
+      </div>
+      <button class="dedit-del" onclick="dayEditDelMeal(${i})">×</button>
+    </div>`).join('');
+
+  // Add meal inline form
+  const addMealForm = `
+    <div class="dedit-add-section">
+      <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;margin-bottom:6px">ADD MEAL</div>
+      <div class="ex-chips meal-type-chips" id="deditTypeChips">
+        ${['Breakfast','Lunch','Dinner','Snack'].map((t,i)=>`<button class="ex-chip meal-type-chip${i===0?' on':''}" onclick="selDEMType(this)">${t}</button>`).join('')}
+      </div>
+      <div class="meal-health-row" id="deditHealthRow">
+        ${[['great','Very healthy'],['good','Good'],['ok','Okay'],['poor','Indulgent']].map(([h,l],i)=>`<button class="meal-h-chip mh-${h}${i===0?' on':''}" data-h="${h}" onclick="selDEMHealth(this)"><div class="mhdot"></div>${l}</button>`).join('')}
+      </div>
+      <div class="ex-custom-row">
+        <input type="text" id="deditMealInput" placeholder="What did you eat?" onkeydown="if(event.key==='Enter')dayEditAddMeal()">
+        <button class="ex-custom-add" onclick="dayEditAddMeal()">+</button>
       </div>
     </div>`;
-  });
-  (day.exercise||[]).forEach(e=>{
-    rows += `<div class="pop-row"><div class="pop-icon"><i class="ph-barbell"></i></div><div>${e.type?.replace(/^\S+\s/,'')||'Exercise'}</div></div>`;
-  });
-  if (day.water)   rows += `<div class="pop-row"><div class="pop-icon"><i class="ph-drop"></i></div><div>Water goal hit</div></div>`;
-  if (day.sleep)   rows += `<div class="pop-row"><div class="pop-icon"><i class="ph-moon"></i></div><div>Sleep goal hit</div></div>`;
-  if (Object.values(day.suppsDone||{}).some(Boolean)) { const doneSupps = Object.entries(day.suppsDone||{}).filter(([,v])=>v).map(([k])=>k).join(', '); rows += `<div class="pop-row"><div class="pop-icon"><i class="ph-pill"></i></div><div>${doneSupps}</div></div>`; }
 
-  const pop = document.createElement('div');
-  pop.className = 'cal-pop';
-  pop.innerHTML = `<button class="pop-close" onclick="closePop()">×</button><div class="pop-date">${label}</div>${rows}`;
-  document.body.appendChild(pop);
+  document.getElementById('dayEditMeals').innerHTML = mealsHTML + addMealForm;
 
-  const rect = event.target.closest('.cal-cell').getBoundingClientRect();
-  const pw=240, ph=240;
-  let left = rect.left + rect.width/2 - pw/2;
-  let top  = rect.bottom + 6;
-  if (left < 6)                   left = 6;
-  if (left+pw > window.innerWidth-6) left = window.innerWidth-pw-6;
-  if (top+ph > window.innerHeight-20) top = rect.top-ph-6;
-  pop.style.left = left+'px'; pop.style.top = top+'px';
+  // --- Exercise ---
+  const exHTML = (day.exercise||[]).map((e,i)=>`
+    <div class="dedit-item">
+      <div class="dedit-dot" style="background:var(--sage)"></div>
+      <div class="dedit-label"><span class="dedit-name">${e.type||'Exercise'}</span></div>
+      <button class="dedit-del" onclick="dayEditDelEx(${i})">×</button>
+    </div>`).join('');
 
-  const ov = document.createElement('div');
-  ov.className = 'pop-overlay'; ov.onclick = closePop;
-  document.body.appendChild(ov);
+  const recent = getRecentExerciseTypes([]);
+  const todayEx = (day.exercise||[]).map(e=>e.type);
+  const chips = recent.map(t=>`<button class="ex-chip ${todayEx.includes(t)?'on':''}" onclick="dayEditToggleEx('${escJ(t)}')">${t}</button>`).join('');
+
+  const addExForm = `
+    <div class="dedit-add-section">
+      <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;margin-bottom:6px">ADD EXERCISE</div>
+      ${chips ? `<div class="ex-chips" id="deditExChips">${chips}</div>` : ''}
+      <div class="ex-custom-row">
+        <input type="text" id="deditExInput" placeholder="What did you do?" onkeydown="if(event.key==='Enter')dayEditAddEx()">
+        <button class="ex-custom-add" onclick="dayEditAddEx()">+</button>
+      </div>
+    </div>`;
+
+  document.getElementById('dayEditExercise').innerHTML = exHTML + addExForm;
+
+  // --- Toggles ---
+  document.getElementById('deditWaterToggle').classList.toggle('on', !!day.water);
+  document.getElementById('deditSleepToggle').classList.toggle('on', !!day.sleep);
+
+  // --- Supps ---
+  const suppItems = supps.map(s=>{
+    const checked = !!(day.suppsDone||{})[s.name];
+    return `<button class="dedit-supp ${checked?'on':''}" onclick="dayEditToggleSupp('${escJ(s.name)}')">${s.name}</button>`;
+  }).join('');
+  document.getElementById('dayEditSupps').innerHTML = suppItems || '<span style="font-size:12px;color:var(--muted)">No supplements set up</span>';
 }
-function closePop() { document.querySelectorAll('.cal-pop,.pop-overlay').forEach(e=>e.remove()); }
+
+// --- Day Edit Actions ---
+function dayEditDelMeal(i) {
+  getDay(_dayEditKey).meals.splice(i,1);
+  save(); renderDayEditModal(); renderChecklist(); renderJournals(); renderCalendar();
+}
+function dayEditDelEx(i) {
+  getDay(_dayEditKey).exercise.splice(i,1);
+  save(); renderDayEditModal(); renderChecklist(); renderJournals(); renderCalendar();
+}
+function selDEMType(btn) {
+  btn.closest('#deditTypeChips').querySelectorAll('.meal-type-chip').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function selDEMHealth(btn) {
+  btn.closest('#deditHealthRow').querySelectorAll('.meal-h-chip').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function dayEditAddMeal() {
+  const inp = document.getElementById('deditMealInput');
+  const name = inp.value.trim(); if (!name) { inp.focus(); return; }
+  const type = document.querySelector('#deditTypeChips .meal-type-chip.on')?.textContent.trim()||'';
+  const health = document.querySelector('#deditHealthRow .meal-h-chip.on')?.dataset.h||'good';
+  getDay(_dayEditKey).meals.push({ type, name, health });
+  save(); inp.value=''; renderDayEditModal(); renderChecklist(); renderJournals(); renderCalendar();
+}
+function dayEditToggleEx(type) {
+  const day = getDay(_dayEditKey);
+  const idx = day.exercise.findIndex(e=>e.type===type);
+  if (idx>=0) day.exercise.splice(idx,1); else day.exercise.push({type});
+  save(); renderDayEditModal(); renderChecklist(); renderJournals(); renderCalendar();
+}
+function dayEditAddEx() {
+  const inp = document.getElementById('deditExInput');
+  const val = inp.value.trim(); if (!val) { inp.focus(); return; }
+  const day = getDay(_dayEditKey);
+  if (!day.exercise.some(e=>e.type===val)) day.exercise.push({type:val});
+  save(); inp.value=''; renderDayEditModal(); renderChecklist(); renderJournals(); renderCalendar();
+}
+function dayEditToggleWater() {
+  const day = getDay(_dayEditKey);
+  day.water = !day.water;
+  save(); renderDayEditModal(); renderChecklist(); renderCalendar();
+}
+function dayEditToggleSleep() {
+  const day = getDay(_dayEditKey);
+  day.sleep = !day.sleep;
+  save(); renderDayEditModal(); renderChecklist(); renderCalendar();
+}
+function dayEditToggleSupp(name) {
+  const day = getDay(_dayEditKey);
+  if (!day.suppsDone) day.suppsDone={};
+  day.suppsDone[name] = !day.suppsDone[name];
+  save(); renderDayEditModal(); renderChecklist(); renderCalendar();
+}
 
 // ===== TABS =====
 const TABS = ['today','meals','move','stats'];
@@ -1137,6 +1325,44 @@ function saveQuickMove() {
     save(); inp.value = ''; renderChecklist(); renderJournals(); renderCalendar();
   }
   closeQuickMoveModal();
+}
+
+
+// ===== EDIT DATE MODAL =====
+let _editDateType = null, _editDateFromKey = null;
+function openEditDateModal(type, fromKey) {
+  _editDateType = type;
+  _editDateFromKey = fromKey;
+  document.getElementById('editDateInput').value = fromKey;
+  document.getElementById('editDateModal').classList.add('open');
+}
+function closeEditDateModal() {
+  document.getElementById('editDateModal').classList.remove('open');
+  _editDateType = null; _editDateFromKey = null;
+}
+document.getElementById('editDateModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('editDateModal')) closeEditDateModal();
+});
+function saveEditDate() {
+  const toKey = document.getElementById('editDateInput').value;
+  if (!toKey || toKey === _editDateFromKey) { closeEditDateModal(); return; }
+  const fromDay = data[_editDateFromKey];
+  if (!fromDay) { closeEditDateModal(); return; }
+
+  const toDay = getDay(toKey);
+  if (_editDateType === 'meals') {
+    toDay.meals = [...(toDay.meals||[]), ...(fromDay.meals||[])];
+    fromDay.meals = [];
+  } else {
+    toDay.exercise = [...(toDay.exercise||[]), ...(fromDay.exercise||[])];
+    fromDay.exercise = [];
+  }
+  // Clean up empty source day if nothing left
+  if (!fromDay.meals?.length && !fromDay.exercise?.length &&
+      !fromDay.water && !fromDay.sleep && !Object.values(fromDay.suppsDone||{}).some(Boolean)) {
+    delete data[_editDateFromKey];
+  }
+  save(); closeEditDateModal(); renderChecklist(); renderJournals(); renderCalendar();
 }
 
 </script>

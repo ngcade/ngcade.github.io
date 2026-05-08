@@ -277,11 +277,11 @@ body::before {
    ========================== */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(61,43,31,0.42); z-index: 100; backdrop-filter: blur(4px); align-items: flex-end; justify-content: center; }
 .modal-overlay.open { display: flex; }
-.modal { background: var(--cream); border-radius: 26px 26px 0 0; padding: 22px 22px 42px; width: 100%; max-width: 430px; animation: slideUp 0.3s cubic-bezier(0.34,1.15,0.64,1); max-height: 88vh; overflow-y: auto; }
+.modal { background: var(--cream); border-radius: 26px 26px 0 0; padding: 22px 22px 42px; width: 100%; max-width: 430px; box-sizing: border-box; animation: slideUp 0.3s cubic-bezier(0.34,1.15,0.64,1); max-height: 88vh; overflow-y: auto; overflow-x: hidden; }
 @keyframes slideUp { from { transform:translateY(100%); opacity:0; } to { transform:translateY(0); opacity:1; } }
 .modal-handle { width: 36px; height: 4px; background: rgba(61,43,31,0.18); border-radius: 2px; margin: 0 auto 16px; }
 .modal-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--brown); margin-bottom: 16px; }
-.modal input, .modal textarea { width: 100%; padding: 12px 14px; border: 1.5px solid rgba(185,122,87,0.22); border-radius: 12px; font-family: 'DM Sans', sans-serif; background: rgba(255,255,255,0.65); color: var(--text); margin-bottom: 11px; }
+.modal input, .modal textarea { width: 100%; padding: 12px 14px; border: 1.5px solid rgba(185,122,87,0.22); border-radius: 12px; font-family: 'DM Sans', sans-serif; background: rgba(255,255,255,0.65); color: var(--text); margin-bottom: 11px; box-sizing: border-box; }
 .modal input:focus, .modal textarea:focus { outline: none; border-color: var(--rose); }
 .modal textarea { resize: none; height: 52px; }
 .modal-date-row { display: flex; align-items: center; gap: 8px; margin-bottom: 13px; }
@@ -390,6 +390,33 @@ body::before {
 .dedit-supp.on { background:var(--rose); color:#fff; border-color:var(--rose); }
 /* Allow tapping any calendar cell, not just ones with data */
 .cal-cell { cursor: pointer; }
+
+.jcard-item-clickable { cursor: pointer; transition: background 0.12s; border-radius: 8px; }
+.jcard-item-clickable:active { background: rgba(185,122,87,0.08); }
+.jcard-item-edit-icon { font-size: 13px; color: var(--muted); opacity: 0.5; margin-left: auto; flex-shrink: 0; }
+
+.pml-item-clickable { cursor: pointer; border-radius: 8px; transition: background 0.12s; }
+.pml-item-clickable:active { background: rgba(185,122,87,0.1); }
+.pml-edit-icon { font-size: 12px; color: var(--muted); opacity: 0.5; margin-left: auto; flex-shrink: 0; }
+
+.edit-modal-compact { padding-bottom: 28px !important; }
+.edit-modal-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .05em; margin: 8px 0 5px; }
+.edit-modal-actions { display: flex; gap: 10px; margin-top: 14px; }
+.edit-modal-actions .modal-cancel { flex: 1; margin: 0; padding: 12px; }
+.edit-modal-save { flex: 2; margin: 0 !important; }
+
+/* Compact date input */
+.modal input[type="date"] {
+  font-size: 14px;
+  padding: 9px 12px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+/* Ensure all flex/chip rows wrap and don't overflow */
+.ex-chips, .meal-health-row, .meal-type-chips {
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
 </style>
 <script src="https://unpkg.com/phosphor-icons@1.4.2"></script>
 </head>
@@ -442,6 +469,7 @@ body::before {
 <!-- MEALS -->
 <div class="section" id="section-meals">
   <div class="sec-head">Meal Journal <span>Colour = healthiness of each meal</span></div>
+  <div style="padding: 0 24px 8px;"><button class="quick-log-btn" onclick="openQuickMealModal()"><i class="ph-plus"></i> Log a Meal</button></div>
   <div class="meal-legend">
     <div class="ml-item"><div class="ml-dot" style="background:var(--h-great)"></div>Very healthy</div>
     <div class="ml-item"><div class="ml-dot" style="background:var(--h-good)"></div>Good</div>
@@ -449,14 +477,13 @@ body::before {
     <div class="ml-item"><div class="ml-dot" style="background:var(--h-poor)"></div>Indulgent</div>
   </div>
   <div id="mealJournal"></div>
-  <div style="padding: 0 24px 8px;"><button class="quick-log-btn" onclick="openQuickMealModal()"><i class="ph-plus"></i> Log a Meal</button></div>
 </div>
 
 <!-- MOVE -->
 <div class="section" id="section-move">
   <div class="sec-head">Movement Log</div>
-  <div id="moveJournal"></div>
   <div style="padding: 0 24px 8px;"><button class="quick-log-btn" onclick="openQuickMoveModal()"><i class="ph-plus"></i> Log a Workout</button></div>
+  <div id="moveJournal"></div>
 </div>
 
 <!-- STATS -->
@@ -519,6 +546,52 @@ body::before {
     <div class="dedit-supp-row" id="dayEditSupps"></div>
 
     <button class="modal-cancel" style="margin-top:18px" onclick="closeDayEditModal()">Done</button>
+  </div>
+</div>
+
+<!-- EDIT MEAL MODAL -->
+<div class="modal-overlay" id="editMealModal">
+  <div class="modal edit-modal-compact">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><i class="ph-fork-knife"></i> Edit Meal</div>
+    <div class="edit-modal-label">DATE</div>
+    <input type="date" id="editMealDateInput">
+    <div class="edit-modal-label">MEAL TYPE</div>
+    <div class="ex-chips meal-type-chips" id="emTypeChips">
+      <button class="ex-chip meal-type-chip" onclick="selEMType(this)">Breakfast</button>
+      <button class="ex-chip meal-type-chip" onclick="selEMType(this)">Lunch</button>
+      <button class="ex-chip meal-type-chip" onclick="selEMType(this)">Dinner</button>
+      <button class="ex-chip meal-type-chip" onclick="selEMType(this)">Snack</button>
+    </div>
+    <div class="edit-modal-label">HEALTHINESS</div>
+    <div class="meal-health-row" id="emHealthRow">
+      <button class="meal-h-chip mh-great" data-h="great" onclick="selEMHealth(this)"><div class="mhdot"></div>Very healthy</button>
+      <button class="meal-h-chip mh-good" data-h="good" onclick="selEMHealth(this)"><div class="mhdot"></div>Good</button>
+      <button class="meal-h-chip mh-ok" data-h="ok" onclick="selEMHealth(this)"><div class="mhdot"></div>Okay</button>
+      <button class="meal-h-chip mh-poor" data-h="poor" onclick="selEMHealth(this)"><div class="mhdot"></div>Indulgent</button>
+    </div>
+    <div class="edit-modal-label">MEAL NAME</div>
+    <input type="text" id="editMealNameInput" placeholder="What did you eat?" onkeydown="if(event.key==='Enter')saveEditMeal()">
+    <div class="edit-modal-actions">
+      <button class="modal-cancel" onclick="closeEditMealModal()">Cancel</button>
+      <button class="modal-submit edit-modal-save" onclick="saveEditMeal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT EXERCISE MODAL -->
+<div class="modal-overlay" id="editExModal">
+  <div class="modal edit-modal-compact">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><i class="ph-barbell"></i> Edit Exercise</div>
+    <div class="edit-modal-label">DATE</div>
+    <input type="date" id="editExDateInput">
+    <div class="edit-modal-label">EXERCISE NAME</div>
+    <input type="text" id="editExNameInput" placeholder="What did you do?" onkeydown="if(event.key==='Enter')saveEditEx()">
+    <div class="edit-modal-actions">
+      <button class="modal-cancel" onclick="closeEditExModal()">Cancel</button>
+      <button class="modal-submit edit-modal-save" onclick="saveEditEx()">Save</button>
+    </div>
   </div>
 </div>
 
@@ -760,10 +833,10 @@ function rowMeals(day, k) {
     : '';
   const mealListHTML = meals.length
     ? `<div class="panel-meal-list">${meals.map((m,i)=>`
-        <div class="pml-item">
+        <div class="pml-item pml-item-clickable" onclick="openEditMealModal('${k}',${i})">
           <div class="pml-dot" style="background:${hColors[m.health]||'#ccc'}"></div>
           <span class="pml-name">${m.type ? m.type+': ' : ''}${m.name}</span>
-          <button class="pml-del" onclick="delMeal(${i},'${k}')">×</button>
+          <i class="ph-pencil pml-edit-icon"></i>
         </div>`).join('')}</div>` : '';
   const typeChips = ['Breakfast','Lunch','Dinner','Snack'].map((t,i)=>
     `<button class="ex-chip meal-type-chip${i===0?' on':''}" onclick="selMealType(this,'${k}')">${t}</button>`
@@ -793,10 +866,10 @@ function rowExercise(day, k) {
 
   const loggedHTML = exList.length
     ? `<div class="panel-meal-list">${exList.map((e,i)=>`
-        <div class="pml-item">
+        <div class="pml-item pml-item-clickable" onclick="openEditExModal('${k}',${i})">
           <div class="pml-dot" style="background:var(--sage)"></div>
           <span class="pml-name">${e.type}</span>
-          <button class="pml-del" onclick="delEx(${i},'${k}')">×</button>
+          <i class="ph-pencil pml-edit-icon"></i>
         </div>`).join('')}</div>` : '';
 
   // Get 3 most recently used exercise types across all data (excluding already logged today)
@@ -998,11 +1071,11 @@ function renderJournals() {
           <span class="jcard-date">${new Date(k+'T00:00:00').toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'})}</span>
           <button class="jcard-edit-date" onclick="openEditDateModal('meals','${k}')" title="Change date"><i class="ph-pencil"></i></button>
         </div>
-        ${d.meals.map((m,i)=>`<div class="jcard-item">
+        ${d.meals.map((m,i)=>`<div class="jcard-item jcard-item-clickable" onclick="openEditMealModal('${k}',${i})">
           <div class="jcard-dot" style="background:${hColors[m.health]||'#ccc'}"></div>
           <span class="jcard-name">${m.name}</span>
           <span class="jcard-health">${hLabels[m.health]||''}</span>
-          <button class="jcard-del" onclick="delMeal(${i},'${k}')">×</button>
+          <i class="ph-pencil jcard-item-edit-icon"></i>
         </div>`).join('')}
       </div>`).join('')
     : '<div class="card"><div class="empty">No meals logged yet</div></div>';
@@ -1014,10 +1087,10 @@ function renderJournals() {
           <span class="jcard-date">${new Date(k+'T00:00:00').toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'})}</span>
           <button class="jcard-edit-date" onclick="openEditDateModal('exercise','${k}')" title="Change date"><i class="ph-pencil"></i></button>
         </div>
-        ${d.exercise.map((e,i)=>`<div class="jcard-item">
+        ${d.exercise.map((e,i)=>`<div class="jcard-item jcard-item-clickable" onclick="openEditExModal('${k}',${i})">
           <div class="jcard-dot" style="background:var(--sage)"></div>
           <span class="jcard-name">${e.type||'Exercise'}</span>
-          <button class="jcard-del" onclick="delEx(${i},'${k}')">×</button>
+          <i class="ph-pencil jcard-item-edit-icon"></i>
         </div>`).join('')}
       </div>`).join('')
     : '<div class="card"><div class="empty">No workouts logged yet</div></div>';
@@ -1363,6 +1436,94 @@ function saveEditDate() {
     delete data[_editDateFromKey];
   }
   save(); closeEditDateModal(); renderChecklist(); renderJournals(); renderCalendar();
+}
+
+
+// ===== EDIT MEAL MODAL =====
+let _emKey = null, _emIdx = null;
+function openEditMealModal(k, i) {
+  _emKey = k; _emIdx = i;
+  const meal = data[k]?.meals?.[i]; if (!meal) return;
+  document.querySelectorAll('#emTypeChips .meal-type-chip').forEach(b => {
+    b.classList.toggle('on', b.textContent.trim() === (meal.type||''));
+  });
+  document.querySelectorAll('#emHealthRow .meal-h-chip').forEach(b => {
+    b.classList.toggle('on', b.dataset.h === meal.health);
+  });
+  document.getElementById('editMealNameInput').value = meal.name || '';
+  document.getElementById('editMealDateInput').value = k;
+  document.getElementById('editMealModal').classList.add('open');
+}
+function closeEditMealModal() {
+  document.getElementById('editMealModal').classList.remove('open');
+  _emKey = null; _emIdx = null;
+}
+document.getElementById('editMealModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('editMealModal')) closeEditMealModal();
+});
+function selEMType(btn) {
+  btn.closest('#emTypeChips').querySelectorAll('.meal-type-chip').forEach(b => b.classList.remove('on'));
+  btn.classList.toggle('on', true);
+}
+function selEMHealth(btn) {
+  btn.closest('#emHealthRow').querySelectorAll('.meal-h-chip').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function saveEditMeal() {
+  const name = document.getElementById('editMealNameInput').value.trim();
+  if (!name) { document.getElementById('editMealNameInput').focus(); return; }
+  const type = document.querySelector('#emTypeChips .meal-type-chip.on')?.textContent.trim() || '';
+  const health = document.querySelector('#emHealthRow .meal-h-chip.on')?.dataset.h || 'good';
+  const newDate = document.getElementById('editMealDateInput').value;
+
+  // Remove from old date
+  const meal = data[_emKey]?.meals?.splice(_emIdx, 1)?.[0];
+  if (!meal) { closeEditMealModal(); return; }
+
+  // Add to new date (may be same or different)
+  const day = getDay(newDate);
+  day.meals.push({ type, name, health });
+
+  // Clean up empty old day
+  if (!data[_emKey]?.meals?.length && !data[_emKey]?.exercise?.length &&
+      !data[_emKey]?.water && !data[_emKey]?.sleep &&
+      !Object.values(data[_emKey]?.suppsDone||{}).some(Boolean)) {
+    delete data[_emKey];
+  }
+  save(); closeEditMealModal(); renderJournals(); renderChecklist(); renderCalendar();
+}
+
+// ===== EDIT EXERCISE MODAL =====
+let _eeKey = null, _eeIdx = null;
+function openEditExModal(k, i) {
+  _eeKey = k; _eeIdx = i;
+  const ex = data[k]?.exercise?.[i]; if (!ex) return;
+  document.getElementById('editExNameInput').value = ex.type || '';
+  document.getElementById('editExDateInput').value = k;
+  document.getElementById('editExModal').classList.add('open');
+}
+function closeEditExModal() {
+  document.getElementById('editExModal').classList.remove('open');
+  _eeKey = null; _eeIdx = null;
+}
+document.getElementById('editExModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('editExModal')) closeEditExModal();
+});
+function saveEditEx() {
+  const name = document.getElementById('editExNameInput').value.trim();
+  if (!name) { document.getElementById('editExNameInput').focus(); return; }
+  const newDate = document.getElementById('editExDateInput').value;
+
+  data[_eeKey]?.exercise?.splice(_eeIdx, 1);
+  const day = getDay(newDate);
+  day.exercise.push({ type: name });
+
+  if (!data[_eeKey]?.meals?.length && !data[_eeKey]?.exercise?.length &&
+      !data[_eeKey]?.water && !data[_eeKey]?.sleep &&
+      !Object.values(data[_eeKey]?.suppsDone||{}).some(Boolean)) {
+    delete data[_eeKey];
+  }
+  save(); closeEditExModal(); renderJournals(); renderChecklist(); renderCalendar();
 }
 
 </script>
